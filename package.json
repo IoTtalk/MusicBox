@@ -1,0 +1,14 @@
+{
+ "name": "musicBoxServer",
+ "version": "0.0.1",
+ "private": true,
+ "dependencies": {
+ 	"express": "4.x",
+  	"socket.io": ">=1.2.1",
+    "ejs" : "1.x"
+ },
+   "scripts": {
+  	"start": "node server.js 140.113.199.200:7788"
+  },
+  "main": "server.js"
+}
