@@ -55,7 +55,9 @@ var cmdHandler = (function () {
     };
     var sendSong = function () {
         addNoteToSongEnd(song.songPart);
+        console.log('in');
         for(var i = 0; i < speakerNum; i++){
+            console.log(defaultSpace-space[i]);
             if(defaultSpace-space[i] > 0){
                 var scale = Math.ceil(i/2);
                 // console.log(scale);
@@ -67,10 +69,9 @@ var cmdHandler = (function () {
                     sendFeature('Key-O', scale, i);
                     sendFeature('Volume-O',scale*-2,i);
                 }
-
+                servio.sockets.in(i).emit('Music-O', {songPart:song.songPart});
             }
         }
-        servio.sockets.emit('Music-O', {songPart:song.songPart});
     };
     var reset = function () {
         playing = false;

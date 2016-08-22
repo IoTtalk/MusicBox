@@ -226,9 +226,7 @@ $(document).ready(function () {
     socket.on("Luminance-O",function(obj){
         $("body").css("background",color[MusicOut.prototype.room]);
     });
-    socket.on("Mode-O", function (obj) {
 
-    });
     //command from MusicBox server
     socket.on("counter",function(num){
        $("#counter").text(num);
