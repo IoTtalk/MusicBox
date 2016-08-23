@@ -129,6 +129,7 @@ MusicOut.prototype = {
             for(var i = 0; i < partLen+1; i++)
                 this.songPart[i].time = (parseInt(this.songPart[i].time) - offset)+"i";
             var lastNoteName = null;
+            var lastIndex = this.songPart[partLen-1].index;
             MusicOut.prototype.currentPart = new Tone.Part(function (time, note) {
 
                 if(lastNoteName != null)
@@ -136,12 +137,12 @@ MusicOut.prototype = {
 
                 if(note.index == -1){
                     $('body').css('background', "#000000");
-                    Tone.Transport.stop();
-                    MusicOut.prototype.currentPart.stop();
+                    // Tone.Transport.stop();
+                    // MusicOut.prototype.currentPart.stop();
                     return;
                 }
                 else{
-                    if ((note.index % partLen) == 0)
+                    if (note.index == lastIndex )
                         socket.emit("ack", note.index);
                     socket.emit("playMsg",{
                         room:MusicOut.prototype.room,
@@ -297,13 +298,4 @@ $(document).ready(function () {
     });
 
 });
-// window.onbeforeunload = function(){
-//     if(MusicOut.prototype.room != -1){
-//         var o = {
-//             room:MusicOut.prototype.room,
-//             state:MusicOut.prototype.currentPart.state,
-//             noteIndex:MusicOut.prototype.currentNote.index
-//         };
-//         socket.emit("leave", o);
-//     }
-// };
+

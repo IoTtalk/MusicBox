@@ -2,6 +2,22 @@
 var socket = io.connect();
 var color = ['#dc143c', '#00bfff', '#ffd700', '#3cb371', '#1e90ff',
     '#ffa500','#9932cc'];
+var iOS = function() {
+    var iDevices = [
+        'iPad Simulator',
+        'iPhone Simulator',
+        'iPod Simulator',
+        'iPad',
+        'iPhone',
+        'iPod'
+    ];
+    if (!!navigator.platform) {
+        while (iDevices.length) {
+            if (navigator.platform === iDevices.pop()){ return true; }
+        }
+    }
+    return false;
+};
 
 //DF MusicOut Class
 function MusicOut(obj) {
@@ -114,7 +130,6 @@ MusicOut.prototype = {
 
     start:function(){
 
-        refreshAudioCtx();
 
         if(this.songPart.length != 1) {
 
@@ -127,17 +142,17 @@ MusicOut.prototype = {
             var offset = parseInt(this.songPart[0].time);
             for(var i = 0; i < partLen+1; i++)
                 this.songPart[i].time = (parseInt(this.songPart[i].time) - offset)+"i";
-
+            var lastIndex = this.songPart[partLen-1].index;
             MusicOut.prototype.currentPart = new Tone.Part(function (time, note) {
 
                 if(note.index == -1){
                     $('body').css('background', "#000000");
-                    Tone.Transport.stop();
-                    MusicOut.prototype.currentPart.stop();
+                    // Tone.Transport.stop();
+                    // MusicOut.prototype.currentPart.stop();
                     return;
                 }
                 else{
-                    if ((note.index % partLen) == 0)
+                    if (note.index == lastIndex)
                         socket.emit("ack", note.index);
                     socket.emit("playMsg",{
                         room:MusicOut.prototype.room,
@@ -151,7 +166,7 @@ MusicOut.prototype = {
                     if(!MusicOut.prototype.mute)
                         MusicOut.prototype.synthesizerPoly.triggerAttackRelease(note.noteName, note.duration, time, note.velocity);
                     // console.log('start');
-                    // console.log(note.index + " " + note.noteName);
+                    console.log(note.index + " " + note.noteName);
 
                 }
 
@@ -160,7 +175,7 @@ MusicOut.prototype = {
 
             MusicOut.prototype.currentPart.start();
             MusicOut.prototype.partArr.push(MusicOut.prototype.currentPart);
-
+            refreshAudioCtx();
             Tone.Transport.start();
         }
         else{
@@ -186,17 +201,16 @@ var refreshAudioCtx = function () {
     if(Math.floor(Date.now()/ 1000) - timeStamp >=25) {
         if (audioCtxl != null) {
             audioCtxl.close();
-            audioCtxl = null;
         }
         if(MusicOut.prototype.synthesizerPoly != null){
             MusicOut.prototype.synthesizerPoly.releaseAll();
             MusicOut.prototype.synthesizerPoly.dispose();
         }
         audioCtxl = new AudioContext();
-        console.log(audioCtxl);
+        // console.log(audioCtxl);
         Tone.setContext(audioCtxl);
         MusicOut.prototype.synthesizerPoly = new Tone.PolySynth(6, Tone.Synth).toMaster();
-        console.log('refresh');
+        // console.log('refresh');
     }
     timeStamp = Math.floor(Date.now()/ 1000);
 };
@@ -207,24 +221,30 @@ $(document).ready(function () {
 
     //ODF command from MBoxCtl
     socket.on("Music-O", function (obj) {
-        console.log(obj);
+        console.log("Music:"+obj);
         music = new MusicOut(obj);
         music.start();
     });
     socket.on("Key-O", function (obj) {
         MusicOut.prototype.key = parseInt(obj);
-        // console.log("Key:" + obj);
+        console.log("Key:" + obj);
     });
     socket.on("Volume-O", function (obj) {
         MusicOut.prototype.volume = parseInt(obj);
-        console.log(obj);
+        console.log("Volume:"+obj);
     });
     socket.on("Instrument-O",function (obj) {
         MusicOut.prototype.instrumentIndex = parseInt(obj);
-        console.log(obj);
+        console.log("Instrument:"+obj);
     });
     socket.on("Luminance-O",function(obj){
-        $("body").css("background",color[MusicOut.prototype.room]);
+        var lum = parseInt(obj);
+        if(lum)
+            $("body").css("background",color[MusicOut.prototype.room]);
+        else
+            $("body").css("background","#000000");
+
+        console.log("Luminance:"+obj)
     });
 
     //command from MusicBox server
@@ -252,26 +272,28 @@ $(document).ready(function () {
         $("body").css("background","#000000");
     };
     $('.entity').click(function () {
-        socket.emit("join",$('.entity').index(this));
+        if(iOS()){
+            socket.emit("join_iOS",$('.entity').index(this));
+        }
+        else{
+            socket.emit("join",$('.entity').index(this));
+        }
     });
     $('#counter').hide();
+
     socket.on("switchSong",function(){
         console.log('switch song');
         $("body").css("background","#000000");
         MusicOut.prototype.clearAllPart();
     });
     socket.on("mute",function (msg) {
-        console.log(msg);
+        // console.log("mute"+msg);
         MusicOut.prototype.mute = Boolean(msg);
     });
+    socket.on("pause",function () {
+        Tone.Transport.pause();
+    });
+    socket.on("play",function () {
+        Tone.Transport.start();
+    });
 });
-// window.onbeforeunload = function(){
-//     if(MusicOut.prototype.room != -1){
-//         var o = {
-//             room:MusicOut.prototype.room,
-//             state:MusicOut.prototype.currentPart.state,
-//             noteIndex:MusicOut.prototype.currentNote.index
-//         };
-//         socket.emit("leave", o);
-//     }
-// };

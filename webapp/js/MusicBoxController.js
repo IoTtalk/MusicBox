@@ -2,6 +2,7 @@ var midiDir = "midi/";
 var song = null;
 var songId = -1;
 var track = 0;
+var socket = io.connect();
 
 //retrieve file
 var getFileBlob = function (url, cb) {
@@ -55,14 +56,7 @@ $(function () {
     });
 
     //ui
-    $('#song').dropdown({
-            onChange: function(value, text, $selectedItem) {
-                if(songId == $('.inputSong').index($selectedItem))
-                    return;
-                songId = $('.inputSong').index($selectedItem);
-                getMidiFile('http://'+window.location.hostname+':5566/'+midiDir+value+'.mid');
-            }
-    });
+
     $('#c').dropdown({
         onChange: function(value, text, $selectedItem) {
             dan.push("C-I",["bug"]);
@@ -87,58 +81,89 @@ $(function () {
             dan.push("Key-I",[value]);
         }
     });
-    $('#volume').dropdown({
-        onChange: function(value, text, $selectedItem) {
-            dan.push("Volume-I",["bug"]);
-            dan.push("Volume-I",[value]);
-        }
-    });
     $('#mode').dropdown({
         onChange: function(value, text, $selectedItem) {
             dan.push("Mode-I",["bug"]);
             dan.push("Mode-I",[value]);
         }
     });
-    // $('#instrument').dropdown({
-    //     onChange: function(value, text, $selectedItem) {
-    //         dan.push("Instrument-I",["bug"]);
-    //         dan.push("Instrument-I",[$('.inputInstrument').index($selectedItem)]);
-    //     }
-    // });
+
+    var activeSongListByIndex = function(index){
+        $(".list").each(function(index){
+            if(index&1)
+                $(this).css("background","#efefef");
+            else
+                $(this).css("background","#fafafa");
+            $(".list").eq(index).prop("active",false);
+        });
+        $(".list").eq(index).prop("active",true);
+        $(".list").eq(index).css("background","#00bd9b");
+        var value =  $(".list").eq(index).attr("name");
+        songId = index;
+        getMidiFile('http://'+window.location.hostname+':5566/'+midiDir+value+'.mid');
+
+    };
+    $(".list").click(function(a) {
+        activeSongListByIndex($(".list").index(this));
+    });
+    $(".left").click(function(){
+        var currentIndx = -1;
+        $(".list").each(function(index){
+            if($(this).prop("active") == true)
+                currentIndx = index;
+
+        });
+        if(currentIndx != -1){
+            currentIndx--;
+            var i = (currentIndx)%($(".list").length);
+            activeSongListByIndex(i);
+        }
+    });
+    $(".right").click(function(){
+        var currentIndx = -1;
+        $(".list").each(function(index){
+            if($(this).prop("active") == true)
+                currentIndx = index;
+        });
+        if(currentIndx != -1){
+            currentIndx++;
+            var i = (currentIndx)%($(".list").length);
+            activeSongListByIndex(i);
+        }
+    });
+    var play = function(){
+        $(this).unbind('click');
+        $(this).attr('class', 'pause');
+        $(this).bind('click',pause);
+        socket.emit('ctl','play');
+    };
+    var pause = function(){
+        $(this).unbind('click');
+        $(this).attr('class', 'play');
+        $(this).bind('click',play);
+        socket.emit('ctl','pause');
+
+    };
+    $(".play").bind('click',play);
 
 
-    // var chageKnob = function (value,IDFName) {
-    //     dan.push(IDFName,["bug"]);
-    //     dan.push(IDFName,[value]);
-    // };
-    // $("#speakerNum").knob({
-    //     'min':1,
-    //     'max':7,
-    //     'change' : function(v){chageKnob($("#speakerNum").val(),"SpeakerNum-I")}
-    // });
-    // $('#speakerNum').val(7).trigger('change');
-    //
-    // $("#period").knob({
-    //     'min':20,
-    //     'max':200,
-    //     'data-step':"20",
-    //     'change' : function(v){chageKnob(v,"Period-I")}
-    // });
-    // $('#period').val(20).trigger('change');
-    //
-    // $("#key").knob({
-    //     'min':-7,
-    //     'max':7,
-    //     'change' : function(v){chageKnob(v,"Key-I")}
-    // });
-    // $('#key').val(0).trigger('change');
-    //
-    // $("#volume").knob({
-    //     'min':-5,
-    //     'max':20,
-    //     'change' : function(v){chageKnob(v,"Volume-I")}
-    // });
-    // $('#volume').val(0).trigger('change');
+    $(".repeat").click(function(){
+        var currentIndx = -1;
+        $(".list").each(function(index){
+            if($(this).prop("active") == true)
+                currentIndx = index;
+        });
+        if(currentIndx != -1)
+            activeSongListByIndex(currentIndx);
+    });
+    $(".bar").change(function(){
+        dan.push("Volume-I",["bug"]);
+        dan.push("Volume-I",[this.value]);
+    })
+
+
+
+
 });
 window.onbeforeunload = function(){
     dan.deregister();

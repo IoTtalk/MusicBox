@@ -4,10 +4,10 @@ var express = require("express"),
     pageGen = require("./PageGen"),
     servio = require("socket.io")(server),
     MidiConvert = require("./MidiConvert"),
-    dan = require('./DAN').dan,
-    cmdHandler = require('./MessageHandler').cmdHandler,
-    ODFList = require('./ShareVariables').ODFList,
-    IDFList = require('./ShareVariables').IDFList;
+    dan = require("./DAN").dan,
+    cmdHandler = require("./MessageHandler").cmdHandler,
+    ODFList = require("./ShareVariables").ODFList,
+    IDFList = require("./ShareVariables").IDFList;
 
 var iottalkIP = process.argv[2];
 
@@ -16,10 +16,10 @@ console.log(iottalkIP);
 app.use(express.static("./webapp"));
 
 app.get("/", function (req, res) {
-    pageGen.Page.getMusicBoxPage(req,res,cmdHandler.getSpace(),cmdHandler.getSpeaknum());
+    pageGen.Page.getMusicBoxPage(req,res,cmdHandler.getSpeaknum());
 });
 app.get("/musicBoxHidden",function (req,res) {
-    pageGen.Page.getMusicBoxHiddenPage(req,res,cmdHandler.getSpace(),cmdHandler.getSpeaknum());
+    pageGen.Page.getMusicBoxHiddenPage(req,res,cmdHandler.getSpeaknum());
 });
 app.get("/musicBoxController", function (req, res) {
     pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList);

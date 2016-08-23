@@ -24,7 +24,7 @@ var cmdHandler = (function () {
                 r = {"start": head, "end": len};
                 head = len;
             }
-            console.log(r);
+            // console.log(r);
             return r;
         }
         else {
@@ -32,10 +32,20 @@ var cmdHandler = (function () {
         }
     };
     var sendNotes = function () {
+
         if( !seekRoom() ){
             console.log('all exit');
             return
         }
+
+        // find all iOS socket connection and send light signal without songPart,
+        // because iOS is not support tonejs
+        for(var i = 0; i < iOSClient.length; i++){
+            if(iOSClient[i].room == (room%speakerNum)){
+                servio.to(iOSClient[i].id).emit('Luminance-O',1);
+            }
+        }
+
         if (song != null){
             var part = song.songPart;
             var r = partition(part.length);
@@ -52,6 +62,7 @@ var cmdHandler = (function () {
                 console.log('reset');
             }
         }
+
     };
     var sendSong = function () {
         addNoteToSongEnd(song.songPart);
@@ -103,10 +114,13 @@ var cmdHandler = (function () {
         //seek for non-empty room
         for(var i = 0; i < speakerNum; i++){
             room += i;
-            if(defaultSpace-space[room%speakerNum] > 0)// none empty
+            if(defaultSpace-space[room%speakerNum] > 0){// none empty
+                if(defaultSpace-space[room%speakerNum] == 1)
+                    servio.sockets.in(room%speakerNum).emit("mute",false);
                 break;
+            }
         }
-        console.log('next play: '+ i);
+            // console.log('next play: '+ room%speakerNum);
         if(i == speakerNum)
             return false;
         else
@@ -118,11 +132,15 @@ var cmdHandler = (function () {
         else
             servio.sockets.emit(feature, obj);
     };
+    var iOSClient = [];
 
     return {
         setSocketIo:function (io) {
             servio = io;
             servio.sockets.on('connection', function (socket) {
+
+                //update space for MusicBox page
+                servio.sockets.emit('changeSpace',space);
 
                 socket.on('join', function (room) {
                     if(playing){
@@ -140,7 +158,21 @@ var cmdHandler = (function () {
                         servio.to(socket.id).emit("join",{message:"disapprove"});
 
                 });
-
+                socket.on('join_iOS',function (room) {
+                    if(space[room] > 0) {
+                        //iOS is not support tonejs so manage iOS socket in other way
+                        socket.room = room;
+                        socket.iOS = true;
+                        iOSClient.push(socket);
+                        // space[room]--;
+                        // space[room] = (space[room] < 0)? 0 : space[room];
+                        // servio.sockets.emit('changeSpace',space);
+                        servio.to(socket.id).emit("join", {message:"approve",room:room});
+                        // servio.sockets.in(room).emit("counter",defaultSpace-space[room]);
+                    }
+                    else
+                        servio.to(socket.id).emit("join",{message:"disapprove"});
+                });
                 //track musicbox playing message
                 var playMsg = null;
                 socket.on('playMsg',function (msg) {
@@ -170,42 +202,75 @@ var cmdHandler = (function () {
                 };
                 //close window
                 socket.onclose = function(reason) {
+                    var room;
+                    if(socket.iOS) {
+                        room = socket.room;
+                        // console.log('iOS close' + room);
+                        if(room == undefined)
+                            return;
+                        // space[room]++;
+                        // space[room] = (space[room] > defaultSpace)? defaultSpace : space[room];
+                        // servio.sockets.emit('changeSpace',space);
+                        // servio.sockets.in(room).emit("counter",defaultSpace-space[room]);
+                        //remove iOS socket from iOSClient array
+                        var index = iOSClient.indexOf(socket);
+                        if (index > -1)
+                            iOSClient.splice(index, 1);
+                    }
+                    else{
+                        room = findSocketRoom(socket);
+                        // console.log(room + ' close');
+                        if(room == -1)
+                            return;
+                        socket.leave(room);
+                        space[room]++;
+                        space[room] = (space[room] > defaultSpace)? defaultSpace : space[room];
+                        servio.sockets.emit('changeSpace',space);
+                        servio.sockets.in(room).emit("counter",defaultSpace-space[room]);
+                        if(mode == 0) {
 
-                    var room = findSocketRoom(socket);
-                    console.log(room + ' close');
-                    if(room == -1)
-                        return;
-                    socket.leave(room);
-                    space[room]++;
-                    space[room] = (space[room] > defaultSpace)? defaultSpace : space[room];
-                    servio.sockets.emit('changeSpace',space);
-                    servio.sockets.in(room).emit("counter",defaultSpace-space[room]);
-                    if(mode == 0) {
+                            //if only one socket in room mute = false
+                            if ((defaultSpace - space[room]) == 1)
+                                servio.sockets.in(room).emit("mute", false);
 
-                        //if only one socket in room mute = false
-                        if((defaultSpace - space[room]) == 1)
-                            servio.sockets.in(room).emit("mute",false);
-
-                        //leave when playing and there is not other speaker playing in this room
-                        if (playMsg != null && playMsg.room == room
-                            && playMsg.state == "started" && (defaultSpace - space[room]) == 0) {
-                            head = playMsg.noteIndex - 1;
-                            sendNotes();
+                            //leave when playing and there is not other speaker playing in this room
+                            if (playMsg != null && playMsg.room == room
+                                && playMsg.state == "started" && (defaultSpace - space[room]) == 0) {
+                                head = playMsg.noteIndex - 1;
+                                // console.log(head);
+                                sendNotes();
+                            }
                         }
                     }
+                    // console.log('close:'+room);
                     Object.getPrototypeOf(this).onclose.call(this, reason);
                 };
 
                 socket.on('ack', function (ackRoomLastNoteIndex) {
+
+                    //make iOS MusicBox dark if there are some sockets light last turn.
+                    for(var i = 0; i < iOSClient.length; i++)
+                        servio.to(iOSClient[i].id).emit("Luminance-O",0);
+
+                    // console.log(ackRoomLastNoteIndex+" "+head);
                     if(ackRoomLastNoteIndex == head)
                         sendNotes();
                 });
-
+                socket.on('ctl',function(cmd){
+                    switch(cmd){
+                        case "pause":
+                            servio.sockets.emit("pause");
+                            break;
+                        case "play":
+                            servio.sockets.emit("play");
+                            break;
+                    }
+                });
             });
         },
         pull:function (odf_name, data) {
 
-            console.log( odf_name+":"+ data );
+            // console.log( odf_name+":"+ data );
             obj = data[0];
             if(obj == "bug") {
                 return;
@@ -215,7 +280,7 @@ var cmdHandler = (function () {
                     reset();
                     song = obj;
                     // console.log(song);
-                    if (songId != -1 && songId != song.songId) {
+                    if (songId != -1) {
                         console.log("switch song!");
                         servio.sockets.emit("switchSong");
                     }
@@ -250,9 +315,6 @@ var cmdHandler = (function () {
                     mode = parseInt(obj);
                     break;
             }
-        },
-        getSpace:function () {
-            return space;
         },
         getSpeaknum:function () {
             return speakerNum;

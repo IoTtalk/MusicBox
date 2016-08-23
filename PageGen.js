@@ -9,7 +9,7 @@ var fs = require('fs'),
 var Page = function () {};
 
 Page.prototype = {
-    getMusicBoxPage : function (req, res, space, speakerNum) {
+    getMusicBoxPage : function (req, res, speakerNum) {
         readAllSongInDir(midiDir, function (err) {
             if (err)
                 console.log(err);
@@ -34,7 +34,7 @@ Page.prototype = {
                                 tr.push(td);
                             }
                             // console.log({tr:tr,space:space});
-                            res.end(ejs.render(contents, {tr: tr, space: space}));
+                            res.end(ejs.render(contents, {tr: tr}));
                         }
                     }
                 );
@@ -42,7 +42,7 @@ Page.prototype = {
 
         });
     },
-    getMusicBoxHiddenPage: function (req, res, space, speakerNum) {
+    getMusicBoxHiddenPage: function (req, res, speakerNum) {
         readAllSongInDir(midiDir, function (err) {
             if (err)
                 console.log(err);
@@ -67,7 +67,7 @@ Page.prototype = {
                                 tr.push(td);
                             }
                             // console.log({tr:tr,space:space});
-                            res.end(ejs.render(contents, {tr: tr, space: space}));
+                            res.end(ejs.render(contents, {tr: tr}));
                         }
                     }
                 );
