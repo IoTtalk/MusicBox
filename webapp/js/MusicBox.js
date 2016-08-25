@@ -34,6 +34,8 @@ MusicOut.prototype = {
 
     currentPart:null,
 
+    currentPlayIndex:-1,
+
     synthesizerPoly:new Tone.PolySynth(6, Tone.Synth).toMaster(),
 
     synthesizerMono:null,
@@ -145,10 +147,10 @@ MusicOut.prototype = {
             var lastIndex = this.songPart[partLen-1].index;
             MusicOut.prototype.currentPart = new Tone.Part(function (time, note) {
 
+                MusicOut.prototype.currentPlayIndex = note.index;
+
                 if(note.index == -1){
                     $('body').css('background', "#000000");
-                    // Tone.Transport.stop();
-                    // MusicOut.prototype.currentPart.stop();
                     return;
                 }
                 else{
@@ -211,17 +213,24 @@ var refreshAudioCtx = function () {
         Tone.setContext(audioCtxl);
         MusicOut.prototype.synthesizerPoly = new Tone.PolySynth(6, Tone.Synth).toMaster();
         // console.log('refresh');
+        timeStamp = Math.floor(Date.now()/ 1000);
+        return true;
     }
-    timeStamp = Math.floor(Date.now()/ 1000);
+    else{
+        timeStamp = Math.floor(Date.now()/ 1000);
+        return false;
+    }
 };
 
 $(document).ready(function () {
 
     timeStamp = Math.floor(Date.now()/ 1000);
-
+    var musicObj,music;
     //ODF command from MBoxCtl
     socket.on("Music-O", function (obj) {
         console.log("Music:"+obj);
+        //copy obj by using JSON parse and stringify
+        musicObj = JSON.parse(JSON.stringify(obj));
         music = new MusicOut(obj);
         music.start();
     });
@@ -294,6 +303,21 @@ $(document).ready(function () {
         Tone.Transport.pause();
     });
     socket.on("play",function () {
-        Tone.Transport.start();
+        //audio context has refreshed
+        if(refreshAudioCtx()){
+            var currentPlayIndex = MusicOut.prototype.currentPlayIndex;
+            //music has not ended
+            if(currentPlayIndex != -1){
+                MusicOut.prototype.currentPart.stop();
+                var startIndex = currentPlayIndex - musicObj.songPart[0].index + 1;
+                musicObj.songPart = musicObj.songPart.slice(startIndex);
+                music = new MusicOut(musicObj);
+                console.log(musicObj.songPart);
+                music.start();
+            }
+        }
+        else {
+            Tone.Transport.start();
+        }
     });
 });
