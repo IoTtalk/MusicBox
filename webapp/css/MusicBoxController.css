@@ -1,0 +1,49 @@
+#boxes{
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.ui.selection.dropdown{
+    min-width: 20%;
+    min-height:40px;
+    padding: 0;
+    border: 0;
+    border-radius:0;
+    background-color:#3cb371;
+    margin: auto;
+}
+.ui.selection.dropdown .menu{
+    background-color: #dcdcdc;
+    max-height: 500px;
+}
+.dropdownTitle{
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 10px;
+}
+.ui.dropdown > .text{
+    color: #f0e68c;
+ }
+.playerControl{
+    width: 240px;
+    margin: auto;
+}
+span{
+    color: white;
+    text-align: center;
+}
+.column{
+    margin-left: 50px;
+}
+
+#musicCtl{
+    margin-top: 50px;
+}
+
+html,
+body {
+    height: 50%;
+}
+.ui.selection.dropdown .menu > .item{
+    text-align: center;
+}

@@ -75,9 +75,9 @@ Page.prototype = {
 
         });
     },
-    getMBoxCtlPage : function (req, res, iottalkIP,IDFList) {
+    getMBoxCtlPage : function (req, res, iottalkIP,IDFList,ctlDefaultValObj) {
 
-        readAllSongInDir(midiDir, function (err, songs) {
+        readAllSongInDir(midiDir, function (err, songNames) {
             if (err)
                 console.log(err);
             else {
@@ -87,12 +87,20 @@ Page.prototype = {
                             console.log(err);
                         }
                         else {
+                            var displaySongNames = [];
+                            for(var i = 0; i < songNames.length; i++)
+                                displaySongNames.push(songNames[i].replace(/_/g, " "));
+                            var songs = {
+                                songNames:songNames,
+                                displaySongNames:displaySongNames
+                            };
                             contents = contents.toString('utf8');
                             res.writeHead(200, {"Content-Type": "text/html"});
                             res.end(ejs.render(contents, {
-                                songs: songs,
+                                songs:songs,
                                 iottalkIP: iottalkIP,
-                                IDFList:IDFList
+                                IDFList:IDFList,
+                                ctlDefaultValObj:ctlDefaultValObj
                             }));
                         }
                     }

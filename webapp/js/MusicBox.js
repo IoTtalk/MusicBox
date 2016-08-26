@@ -2,6 +2,7 @@
 var socket = io.connect();
 var color = ['#dc143c', '#00bfff', '#ffd700', '#3cb371', '#1e90ff',
     '#ffa500','#9932cc'];
+
 var iOS = function() {
     var iDevices = [
         'iPad Simulator',
@@ -146,7 +147,6 @@ MusicOut.prototype = {
                 this.songPart[i].time = (parseInt(this.songPart[i].time) - offset)+"i";
             var lastIndex = this.songPart[partLen-1].index;
             MusicOut.prototype.currentPart = new Tone.Part(function (time, note) {
-
                 MusicOut.prototype.currentPlayIndex = note.index;
 
                 if(note.index == -1){
@@ -155,7 +155,7 @@ MusicOut.prototype = {
                 }
                 else{
                     if (note.index == lastIndex)
-                        socket.emit("ack", note.index);
+                        socket.emit("partEndAck", note.index);
                     socket.emit("playMsg",{
                         room:MusicOut.prototype.room,
                         state:MusicOut.prototype.currentPart.state,
@@ -168,16 +168,15 @@ MusicOut.prototype = {
                     if(!MusicOut.prototype.mute)
                         MusicOut.prototype.synthesizerPoly.triggerAttackRelease(note.noteName, note.duration, time, note.velocity);
                     // console.log('start');
-                    console.log(note.index + " " + note.noteName);
-
+                    // console.log(note.index + " " + note.noteName);
+                    $("#note").text("Note:" + note.noteName);
                 }
 
 
             }, this.songPart);
-
+            refreshAudioCtx();
             MusicOut.prototype.currentPart.start();
             MusicOut.prototype.partArr.push(MusicOut.prototype.currentPart);
-            refreshAudioCtx();
             Tone.Transport.start();
         }
         else{
@@ -198,9 +197,11 @@ MusicOut.prototype = {
 };
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioCtxl = null;
+var refreshSec = 15;
 var timeStamp;
 var refreshAudioCtx = function () {
-    if(Math.floor(Date.now()/ 1000) - timeStamp >=25) {
+    if(Math.floor(Date.now()/ 1000) - timeStamp >= refreshSec) {
+        // alert('refresh');
         if (audioCtxl != null) {
             audioCtxl.close();
         }
@@ -223,23 +224,34 @@ var refreshAudioCtx = function () {
 };
 
 $(document).ready(function () {
-
     timeStamp = Math.floor(Date.now()/ 1000);
     var musicObj,music;
     //ODF command from MBoxCtl
     socket.on("Music-O", function (obj) {
+        console.log("receive");
         console.log("Music:"+obj);
         //copy obj by using JSON parse and stringify
+        //musicObj will be used to construct music when audio context time out.
         musicObj = JSON.parse(JSON.stringify(obj));
         music = new MusicOut(obj);
+        //if mode equals 1 need to synchronize with MusicBox Server first
+        //the actual start time of music will be the moment that receive playMode1 from MusicBox Server.
+        if(obj.mode == 1) {
+            socket.emit("receiveSongAck");
+            return;
+        }
         music.start();
     });
     socket.on("Key-O", function (obj) {
-        MusicOut.prototype.key = parseInt(obj);
+        var key = parseInt(obj);
+        MusicOut.prototype.key = key;
+        $("#key").text("Key:" + key);
         console.log("Key:" + obj);
     });
     socket.on("Volume-O", function (obj) {
-        MusicOut.prototype.volume = parseInt(obj);
+        var volume = parseInt(obj);
+        MusicOut.prototype.volume = volume;
+        $("#volume").text("Volume:" + volume);
         console.log("Volume:"+obj);
     });
     socket.on("Instrument-O",function (obj) {
@@ -255,13 +267,12 @@ $(document).ready(function () {
 
         console.log("Luminance:"+obj)
     });
-
-    //command from MusicBox server
+    //deal with room space
     socket.on("counter",function(num){
-       $("#counter").text(num);
+       $("#counter").text("N:"+num);
     });
-
-    //UI
+    //when MusicBox load complete request space from MusicBox Server
+    socket.emit("initSpace");
     socket.on("changeSpace",function (space) {
         $('.entity').each(function( index ) {
             $( this ).text(space[index]);
@@ -290,10 +301,12 @@ $(document).ready(function () {
     });
     $('#counter').hide();
 
+    //ctl message
     socket.on("switchSong",function(){
         console.log('switch song');
         $("body").css("background","#000000");
         MusicOut.prototype.clearAllPart();
+        console.log('clearAllPart');
     });
     socket.on("mute",function (msg) {
         // console.log("mute"+msg);
@@ -312,12 +325,15 @@ $(document).ready(function () {
                 var startIndex = currentPlayIndex - musicObj.songPart[0].index + 1;
                 musicObj.songPart = musicObj.songPart.slice(startIndex);
                 music = new MusicOut(musicObj);
-                console.log(musicObj.songPart);
                 music.start();
             }
         }
         else {
             Tone.Transport.start();
         }
+    });
+    socket.on("playMode1",function () {
+        console.log('start');
+        music.start();
     });
 });

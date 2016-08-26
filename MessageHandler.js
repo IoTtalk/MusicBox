@@ -1,17 +1,18 @@
 var color = require('./ShareVariables').color;
 
-var cmdHandler = (function () {
+var msgHandler = (function () {
 
     var song = null;
     var songId = -1;
     var playing = false;
     var head = 0;
     var period = 20;
+    var volume  = 0;
     var room = 0;
-    var speakerNum = 7;
-    var defaultSpace = 5;
+    var C = 7;
+    var N = 5;
     var mode = 0;
-    var space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,defaultSpace);
+    var space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,N);
     var servio = null;
     var partition = function (len) {
         var r;
@@ -41,19 +42,22 @@ var cmdHandler = (function () {
         // find all iOS socket connection and send light signal without songPart,
         // because iOS is not support tonejs
         for(var i = 0; i < iOSClient.length; i++){
-            if(iOSClient[i].room == (room%speakerNum)){
+            if(iOSClient[i].room == (room%C)){
                 servio.to(iOSClient[i].id).emit('Luminance-O',1);
             }
         }
-
         if (song != null){
+            //reset MusicBox page volume and key
+            sendFeature("Volume-O",volume);
+            sendFeature("Key-O",0);
+
             var part = song.songPart;
             var r = partition(part.length);
             if (r != null) {
                 var p = part.slice(r.start, r.end);
                 addNoteToSongEnd(p);
                 var o = {songPart: p};
-                servio.sockets.in(room % speakerNum).emit('Music-O', o);
+                servio.sockets.in(room % C).emit('Music-O', o);
                 room++;
                 playing = true;
             }
@@ -66,10 +70,9 @@ var cmdHandler = (function () {
     };
     var sendSong = function () {
         addNoteToSongEnd(song.songPart);
-        console.log('in');
-        for(var i = 0; i < speakerNum; i++){
-            console.log(defaultSpace-space[i]);
-            if(defaultSpace-space[i] > 0){
+        for(var i = 0; i < C; i++){
+            // console.log(N-space[i]);
+            if(N-space[i] > 0){
                 var scale = Math.ceil(i/2);
                 // console.log(scale);
                 if(i%2) {
@@ -80,7 +83,7 @@ var cmdHandler = (function () {
                     sendFeature('Key-O', scale, i);
                     sendFeature('Volume-O',scale*-2,i);
                 }
-                servio.sockets.in(i).emit('Music-O', {songPart:song.songPart});
+                servio.sockets.in(i).emit('Music-O', {songPart:song.songPart,mode:1});
             }
         }
     };
@@ -112,16 +115,16 @@ var cmdHandler = (function () {
     };
     var seekRoom = function () {
         //seek for non-empty room
-        for(var i = 0; i < speakerNum; i++){
+        for(var i = 0; i < C; i++){
             room += i;
-            if(defaultSpace-space[room%speakerNum] > 0){// none empty
-                if(defaultSpace-space[room%speakerNum] == 1)
-                    servio.sockets.in(room%speakerNum).emit("mute",false);
+            if(N-space[room%C] > 0){// none empty
+                if(N-space[room%C] == 1)
+                    servio.sockets.in(room%C).emit("mute",false);
                 break;
             }
         }
-            // console.log('next play: '+ room%speakerNum);
-        if(i == speakerNum)
+            // console.log('next play: '+ room%C);
+        if(i == C)
             return false;
         else
             return true;
@@ -133,15 +136,16 @@ var cmdHandler = (function () {
             servio.sockets.emit(feature, obj);
     };
     var iOSClient = [];
-
+    var receiveSongAckNum = 0;
     return {
         setSocketIo:function (io) {
             servio = io;
             servio.sockets.on('connection', function (socket) {
 
                 //update space for MusicBox page
-                servio.sockets.emit('changeSpace',space);
-
+                socket.on('initSpace',function () {
+                    servio.sockets.emit('changeSpace',space);
+                });
                 socket.on('join', function (room) {
                     if(playing){
                         servio.to(socket.id).emit("mute",true);
@@ -152,7 +156,7 @@ var cmdHandler = (function () {
                         space[room] = (space[room] < 0)? 0 : space[room];
                         servio.sockets.emit('changeSpace',space);
                         servio.to(socket.id).emit("join", {message:"approve",room:room});
-                        servio.sockets.in(room).emit("counter",defaultSpace-space[room]);
+                        servio.sockets.in(room).emit("counter",N-space[room]);
                     }
                     else
                         servio.to(socket.id).emit("join",{message:"disapprove"});
@@ -168,7 +172,7 @@ var cmdHandler = (function () {
                         // space[room] = (space[room] < 0)? 0 : space[room];
                         // servio.sockets.emit('changeSpace',space);
                         servio.to(socket.id).emit("join", {message:"approve",room:room});
-                        // servio.sockets.in(room).emit("counter",defaultSpace-space[room]);
+                        // servio.sockets.in(room).emit("counter",N-space[room]);
                     }
                     else
                         servio.to(socket.id).emit("join",{message:"disapprove"});
@@ -209,9 +213,9 @@ var cmdHandler = (function () {
                         if(room == undefined)
                             return;
                         // space[room]++;
-                        // space[room] = (space[room] > defaultSpace)? defaultSpace : space[room];
+                        // space[room] = (space[room] > N)? N : space[room];
                         // servio.sockets.emit('changeSpace',space);
-                        // servio.sockets.in(room).emit("counter",defaultSpace-space[room]);
+                        // servio.sockets.in(room).emit("counter",N-space[room]);
                         //remove iOS socket from iOSClient array
                         var index = iOSClient.indexOf(socket);
                         if (index > -1)
@@ -224,18 +228,18 @@ var cmdHandler = (function () {
                             return;
                         socket.leave(room);
                         space[room]++;
-                        space[room] = (space[room] > defaultSpace)? defaultSpace : space[room];
+                        space[room] = (space[room] > N)? N : space[room];
                         servio.sockets.emit('changeSpace',space);
-                        servio.sockets.in(room).emit("counter",defaultSpace-space[room]);
+                        servio.sockets.in(room).emit("counter",N-space[room]);
                         if(mode == 0) {
 
                             //if only one socket in room mute = false
-                            if ((defaultSpace - space[room]) == 1)
+                            if ((N - space[room]) == 1)
                                 servio.sockets.in(room).emit("mute", false);
 
                             //leave when playing and there is not other speaker playing in this room
                             if (playMsg != null && playMsg.room == room
-                                && playMsg.state == "started" && (defaultSpace - space[room]) == 0) {
+                                && playMsg.state == "started" && (N - space[room]) == 0) {
                                 head = playMsg.noteIndex - 1;
                                 // console.log(head);
                                 sendNotes();
@@ -246,7 +250,7 @@ var cmdHandler = (function () {
                     Object.getPrototypeOf(this).onclose.call(this, reason);
                 };
 
-                socket.on('ack', function (ackRoomLastNoteIndex) {
+                socket.on('partEndAck', function (ackRoomLastNoteIndex) {
 
                     //make iOS MusicBox dark if there are some sockets light last turn.
                     for(var i = 0; i < iOSClient.length; i++)
@@ -256,6 +260,19 @@ var cmdHandler = (function () {
                     if(ackRoomLastNoteIndex == head)
                         sendNotes();
                 });
+
+                socket.on('receiveSongAck',function () {
+                    //calculate established socket number
+                    receiveSongAckNum++;
+                    var socketNum = 0;
+                    for(var i = 0; i < C; i++)
+                        socketNum += N-space[i];
+                    if(receiveSongAckNum == socketNum) {
+                        servio.sockets.emit('playMode1');
+                        receiveSongAckNum = 0;
+                    }
+                });
+
                 socket.on('ctl',function(cmd){
                     switch(cmd){
                         case "pause":
@@ -270,7 +287,7 @@ var cmdHandler = (function () {
         },
         pull:function (odf_name, data) {
 
-            // console.log( odf_name+":"+ data );
+            console.log( odf_name+":"+ data );
             obj = data[0];
             if(obj == "bug") {
                 return;
@@ -288,6 +305,7 @@ var cmdHandler = (function () {
                     addIndexToSongPart(song.songPart);
                     if(mode == 0)
                         sendNotes();
+
                     else if(mode == 1)
                         sendSong();
 
@@ -297,6 +315,7 @@ var cmdHandler = (function () {
                     break;
                 case "Volume-O":
                     sendFeature(odf_name,obj);
+                    volume = parseInt(obj);
                     break;
                 case "Luminance-O":
                     sendFeature(odf_name,obj);
@@ -305,11 +324,11 @@ var cmdHandler = (function () {
                     period = parseInt(obj);
                     break;
                 case "C-O":
-                    speakerNum = parseInt(obj);
+                    C = parseInt(obj);
                     break;
                 case "N-O":
                     space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,parseInt(obj));
-                    defaultSpace = parseInt(obj);
+                    N = parseInt(obj);
                     break;
                 case "Mode-O":
                     mode = parseInt(obj);
@@ -317,11 +336,19 @@ var cmdHandler = (function () {
             }
         },
         getSpeaknum:function () {
-            return speakerNum;
+            return C;
+        },
+        getCtlDefaultValObj:function () {
+            return  {
+                C:C,
+                N:N,
+                Mode:mode,
+                Period:period
+            };
         }
     };
 })();
 
-exports.cmdHandler = cmdHandler;
+exports.msgHandler = msgHandler;
 
 

@@ -98,9 +98,18 @@ $(function () {
         });
         $(".list").eq(index).prop("active",true);
         $(".list").eq(index).css("background","#00bd9b");
+
         var value =  $(".list").eq(index).attr("name");
         songId = index;
         getMidiFile('http://'+window.location.hostname+':5566/'+midiDir+value+'.mid');
+
+        //chang control button to pause icon
+        var controlBtn = $('.play');
+        if(controlBtn.length != 0){
+            controlBtn.unbind('click');
+            controlBtn.attr('class', 'pause');
+            controlBtn.bind('click',pause);
+        }
 
     };
     $(".list").click(function(a) {
@@ -159,10 +168,7 @@ $(function () {
     $(".bar").change(function(){
         dan.push("Volume-I",["bug"]);
         dan.push("Volume-I",[this.value]);
-    })
-
-
-
+    });
 
 });
 window.onbeforeunload = function(){

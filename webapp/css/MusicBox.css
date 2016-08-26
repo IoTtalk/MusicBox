@@ -1,7 +1,7 @@
 
-#counter{
+.debugMsg{
     color: white;
-    margin-top: 20px;
+    /*margin-top: 20px;*/
     font-size: 20px;
 }
 .ui.table{

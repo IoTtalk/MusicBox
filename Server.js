@@ -5,7 +5,7 @@ var express = require("express"),
     servio = require("socket.io")(server),
     MidiConvert = require("./MidiConvert"),
     dan = require("./DAN").dan,
-    cmdHandler = require("./MessageHandler").cmdHandler,
+    msgHandler = require("./MessageHandler").msgHandler,
     ODFList = require("./ShareVariables").ODFList,
     IDFList = require("./ShareVariables").IDFList;
 
@@ -16,17 +16,17 @@ console.log(iottalkIP);
 app.use(express.static("./webapp"));
 
 app.get("/", function (req, res) {
-    pageGen.Page.getMusicBoxPage(req,res,cmdHandler.getSpeaknum());
+    pageGen.Page.getMusicBoxPage(req,res,msgHandler.getSpeaknum());
 });
 app.get("/musicBoxHidden",function (req,res) {
-    pageGen.Page.getMusicBoxHiddenPage(req,res,cmdHandler.getSpeaknum());
+    pageGen.Page.getMusicBoxHiddenPage(req,res,msgHandler.getSpeaknum());
 });
 app.get("/musicBoxController", function (req, res) {
-    pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList);
+    pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList,msgHandler.getCtlDefaultValObj());
 });
 
 
-cmdHandler.setSocketIo(servio);
+msgHandler.setSocketIo(servio);
 
 server.listen((process.env.PORT || 5566), '0.0.0.0');
 
@@ -41,7 +41,7 @@ var macAddr = genMacAddr();
 
 console.log("mac address: "+macAddr);
 
-dan.init(cmdHandler.pull, 'http://' + iottalkIP , macAddr, {
+dan.init(msgHandler.pull, 'http://' + iottalkIP , macAddr, {
 
     'dm_name': 'MusicBox',
     'u_name': 'yb',

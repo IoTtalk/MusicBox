@@ -20,17 +20,33 @@
 
 
     <link href="../css/semantic.css" rel="stylesheet" type="text/css">
-    <link href="../css/musicBoxController.css" rel="stylesheet" type="text/css">
+    <link href="../css/MusicBoxController.css" rel="stylesheet" type="text/css">
     <link href="../css/player.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="containerPlayer">
-    <div id="playerContainer" style="height: 40px;">
-        <div class="dropdown" id="n" style="height: 40px;width: 50px;border-radius: 0px; color: white;">
-            <span>N:</span>
-            <input type="hidden" name="n">
-            <i class="dropdown icon"></i>
+    <div id="navigateBar">
+        <div class="ui selection dropdown" id="c">
+            <div class="dropdownTitle"><span>C</span></div>
+            <input type="hidden" name="C" value="<%= ctlDefaultValObj.C %>">
+            <!--<i class="dropdown icon"></i>-->
+            <div class="default text" align="center"></div>
+            <div class="menu">
+                <div class="item C">1</div>
+                <div class="item C">2</div>
+                <div class="item C">3</div>
+                <div class="item C">4</div>
+                <div class="item C">5</div>
+                <div class="item C">6</div>
+                <div class="item C">7</div>
+            </div>
+        </div>
+        <div class="ui selection dropdown" id="n">
+            <!--<div class="dropdownTitle"><span>N:</span></div>-->
+            <input type="hidden" name="n" value="<%= ctlDefaultValObj.N %>">
+            <!--<i class="dropdown icon"></i>-->
+            <div class="dropdownTitle"><span>N</span></div>
             <div class="default text" align="center"></div>
             <div class="menu">
                 <div class="item inputN">1</div>
@@ -40,29 +56,60 @@
                 <div class="item inputN">5</div>
                 <div class="item inputN">6</div>
                 <div class="item inputN">7</div>
+                <div class="item inputN">8</div>
+                <div class="item inputN">9</div>
+                <div class="item inputN">10</div>
             </div>
         </div>
-        <!--<button class="ui teal button" style="height: 40px;border-radius: 0px;">123</button>-->
-        <!--<button class="ui teal button" style="height: 40px;border-radius: 0px;">123</button>-->
-        <!--<button class="ui teal button" style="height: 40px;border-radius: 0px;">123</button>-->
-
+        <div class="ui selection dropdown" id="mode">
+            <!--<div class="dropdownTitle"><span>N:</span></div>-->
+            <input type="hidden" name="mode" value="<%= ctlDefaultValObj.Mode %>">
+            <!--<i class="dropdown icon"></i>-->
+            <div class="dropdownTitle"><span>Mode</span></div>
+            <div class="default text" align="center"></div>
+            <div class="menu">
+                <div class="item inputMode">0</div>
+                <div class="item inputMode">1</div>
+            </div>
+        </div>
+        <div class="ui selection dropdown" id="period">
+            <div class="dropdownTitle"><span>Period</span></div>
+            <input type="hidden" name="Period" value="<%= ctlDefaultValObj.Period %>">
+            <!--<i class="dropdown icon"></i>-->
+            <div class="default text" align="center"></div>
+            <div class="menu">
+                <div class="item inputPeriod">20</div>
+                <div class="item inputPeriod">30</div>
+                <div class="item inputPeriod">40</div>
+                <div class="item inputPeriod">50</div>
+                <div class="item inputPeriod">60</div>
+                <div class="item inputPeriod">70</div>
+                <div class="item inputPeriod">80</div>
+                <div class="item inputPeriod">90</div>
+                <div class="item inputPeriod">100</div>
+                <div class="item inputPeriod">110</div>
+                <div class="item inputPeriod">120</div>
+            </div>
+        </div>
     </div>
     <div id="listContainer" class="playlistContainer">
         <ul id="playListContainer">
-            <% for(var i = 0; i < songs.length; i++){ %>
-            <li class="list" name="<%= songs[i] %>"><a><%= songs[i] %></a></li>
+            <% for(var i = 0; i < songs.songNames.length; i++){ %>
+            <li class="list" name="<%= songs.songNames[i] %>"><a><%= songs.displaySongNames[i] %></a></li>
             <% } %>
         </ul>
     </div>
 
     <div id="playerContainer">
-        <ul class="controls">
-            <!-- <li><a href="#" class="shuffle shuffleActive" data-attr="shuffled"></a></li> -->
-            <li><a href="#" class="left"></a></li>
-            <li><a href="#" class="play"></a></li>
-            <li><a href="#" class="right"></a></li>
-            <li><a href="#" class="repeat"></a></li>
-        </ul>
+        <div class="playerControl">
+            <ul class="controls">
+                <!-- <li><a href="#" class="shuffle shuffleActive" data-attr="shuffled"></a></li> -->
+                <li><a href="#" class="left"></a></li>
+                <li><a href="#" class="play"></a></li>
+                <li><a href="#" class="right"></a></li>
+                <li><a href="#" class="repeat"></a></li>
+            </ul>
+        </div>
         <!-- <div class="audioDetails">
             <span class="songPlay"></span>
             <span data-attr="timer" class="audioTime"></span>
@@ -78,111 +125,6 @@
 
     </div>
 
-</div>
-
-
-<div class="row">
-
-    <div class="ui page grid">
-
-        <div class="five column row">
-
-            <div class="column">
-                <div class="ui selection dropdown" id="n">
-                    <span>N:</span>
-                    <input type="hidden" name="n">
-                    <i class="dropdown icon"></i>
-                    <div class="default text" align="center"></div>
-                    <div class="menu">
-                        <div class="item inputN">1</div>
-                        <div class="item inputN">2</div>
-                        <div class="item inputN">3</div>
-                        <div class="item inputN">4</div>
-                        <div class="item inputN">5</div>
-                        <div class="item inputN">6</div>
-                        <div class="item inputN">7</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column">
-                <div class="ui selection dropdown" id="c">
-                    <span>C:</span>
-                    <input type="hidden" name="C">
-                    <i class="dropdown icon"></i>
-                    <div class="default text" align="center"></div>
-                    <div class="menu">
-                        <div class="item C">1</div>
-                        <div class="item C">2</div>
-                        <div class="item C">3</div>
-                        <div class="item C">4</div>
-                        <div class="item C">5</div>
-                        <div class="item C">6</div>
-                        <div class="item C">7</div>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="ui selection dropdown" id="period">
-                    <span>Period:</span>
-                    <input type="hidden" name="Period">
-                    <i class="dropdown icon"></i>
-                    <div class="default text" align="center"></div>
-                    <div class="menu">
-                        <div class="item inputPeriod">20</div>
-                        <div class="item inputPeriod">30</div>
-                        <div class="item inputPeriod">40</div>
-                        <div class="item inputPeriod">50</div>
-                        <div class="item inputPeriod">60</div>
-                        <div class="item inputPeriod">70</div>
-                        <div class="item inputPeriod">80</div>
-                        <div class="item inputPeriod">90</div>
-                        <div class="item inputPeriod">100</div>
-                        <div class="item inputPeriod">110</div>
-                        <div class="item inputPeriod">120</div>
-                    </div>
-                </div>
-            </div>
-            <!--<div class="column">-->
-                <!--<div class="ui selection dropdown" id="key">-->
-                    <!--<span>Key:</span>-->
-                    <!--<input type="hidden" name="key">-->
-                    <!--<i class="dropdown icon"></i>-->
-                    <!--<div class="default text" align="center"></div>-->
-                    <!--<div class="menu">-->
-                        <!--<div class="item inputKey">-7</div>-->
-                        <!--<div class="item inputKey">-6</div>-->
-                        <!--<div class="item inputKey">-5</div>-->
-                        <!--<div class="item inputKey">-4</div>-->
-                        <!--<div class="item inputKey">-3</div>-->
-                        <!--<div class="item inputKey">-2</div>-->
-                        <!--<div class="item inputKey">-1</div>-->
-                        <!--<div class="item inputKey">0</div>-->
-                        <!--<div class="item inputKey">1</div>-->
-                        <!--<div class="item inputKey">2</div>-->
-                        <!--<div class="item inputKey">3</div>-->
-                        <!--<div class="item inputKey">4</div>-->
-                        <!--<div class="item inputKey">5</div>-->
-                        <!--<div class="item inputKey">6</div>-->
-                        <!--<div class="item inputKey">7</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="column">-->
-                <!--<div class="ui selection dropdown" id="mode">-->
-                    <!--<span>Mode:</span>-->
-                    <!--<input type="hidden" name="Mode">-->
-                    <!--<i class="dropdown icon"></i>-->
-                    <!--<div class="default text" align="center"></div>-->
-                    <!--<div class="menu">-->
-                        <!--<div class="item inputPeriod">0</div>-->
-                        <!--<div class="item inputPeriod">1</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-
-        </div>
-    </div>
 </div>
 
 </body>
