@@ -4,7 +4,7 @@
  "private": true,
  "dependencies": {
  	"express": "4.x",
-  	"socket.io": ">=1.2.1",
+  	"socket.io": ">=1.4",
     "ejs" : "1.x"
  },
    "scripts": {
