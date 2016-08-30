@@ -61,31 +61,36 @@ $(function () {
         onChange: function(value, text, $selectedItem) {
             dan.push("C-I",["bug"]);
             dan.push("C-I",[value]);
-        }
+        },
+        allowReselection: true
     });
     $('#n').dropdown({
-           onChange: function(value, text, $selectedItem) {
-                dan.push("N-I",["bug"]);
-                dan.push("N-I",[value]);
-           }
+        onChange: function(value, text, $selectedItem) {
+            dan.push("N-I",["bug"]);
+            dan.push("N-I",[value]);
+        },
+        allowReselection: true
     });
     $('#period').dropdown({
         onChange: function(value, text, $selectedItem) {
             dan.push("Period-I",["bug"]);
             dan.push("Period-I",[value]);
-        }
+        },
+        allowReselection: true
     });
     $('#key').dropdown({
         onChange: function(value, text, $selectedItem) {
             dan.push("Key-I",["bug"]);
             dan.push("Key-I",[value]);
-        }
+        },
+        allowReselection: true
     });
     $('#mode').dropdown({
         onChange: function(value, text, $selectedItem) {
             dan.push("Mode-I",["bug"]);
             dan.push("Mode-I",[value]);
-        }
+        },
+        allowReselection: true
     });
 
     var activeSongListByIndex = function(index){

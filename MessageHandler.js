@@ -327,8 +327,10 @@ var msgHandler = (function () {
                     C = parseInt(obj);
                     break;
                 case "N-O":
-                    space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,parseInt(obj));
-                    N = parseInt(obj);
+                    var newN = parseInt(obj);
+                    for(var i = 0; i < C; i++)
+                        space[i] = newN - (N - space[i])
+                    N = newN;
                     break;
                 case "Mode-O":
                     mode = parseInt(obj);
