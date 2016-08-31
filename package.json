@@ -1,5 +1,5 @@
 {
- "name": "musicBoxServer",
+ "name": "MusicBox",
  "version": "0.0.1",
  "private": true,
  "dependencies": {
@@ -8,7 +8,7 @@
     "ejs" : "1.x"
  },
    "scripts": {
-  	"start": "node server.js 140.113.199.200:7788"
+  	"start": "node Server.js localhost:9999"
   },
-  "main": "server.js"
+  "main": "Server.js"
 }

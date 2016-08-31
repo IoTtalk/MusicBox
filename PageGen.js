@@ -3,7 +3,7 @@ var fs = require('fs'),
     color = require('./ShareVariables').color,
     musicBoxDir = __dirname + "/webapp/html/MusicBox.ejs",
     musicBoxHiddenDir = __dirname + "/webapp/html/MusicBoxHidden.ejs",
-    mBoxCtlDir = __dirname + "/webapp/html/MusicBoxController.ejs",
+    mBoxCtlDir = __dirname + "/webapp/html/MBoxCtl.ejs",
     midiDir = __dirname + "/webapp/midi";
 
 var Page = function () {};

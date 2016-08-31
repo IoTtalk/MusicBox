@@ -25,7 +25,7 @@ var toBinary = function (blob) {
     reader.onloadend = function () {
         song = MidiConvert.parseParts(reader.result)[track];
         var obj = {songPart: song, songId: songId};
-        dan.push("Music-I",["bug"]);
+        // dan.push("Music-I",["bug"]);
         dan.push("Music-I",[obj]);
     };
     reader.readAsBinaryString(blob);
@@ -56,38 +56,34 @@ $(function () {
     });
 
     //ui
-
     $('#c').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("C-I",["bug"]);
+            // dan.push("C-I",["bug"]);
             dan.push("C-I",[value]);
+            $("#cVal").text(value + " clusters");
         },
         allowReselection: true
     });
     $('#n').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("N-I",["bug"]);
+            // dan.push("N-I",["bug"]);
             dan.push("N-I",[value]);
+            $("#nVal").text(value + " spaces");
         },
         allowReselection: true
     });
     $('#period').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("Period-I",["bug"]);
+            // dan.push("Period-I",["bug"]);
             dan.push("Period-I",[value]);
+            $("#periodVal").text(value + " notes");
         },
         allowReselection: true
     });
-    $('#key').dropdown({
-        onChange: function(value, text, $selectedItem) {
-            dan.push("Key-I",["bug"]);
-            dan.push("Key-I",[value]);
-        },
-        allowReselection: true
-    });
+
     $('#mode').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("Mode-I",["bug"]);
+            // dan.push("Mode-I",["bug"]);
             dan.push("Mode-I",[value]);
         },
         allowReselection: true
@@ -171,7 +167,7 @@ $(function () {
             activeSongListByIndex(currentIndx);
     });
     $(".bar").change(function(){
-        dan.push("Volume-I",["bug"]);
+        // dan.push("Volume-I",["bug"]);
         dan.push("Volume-I",[this.value]);
     });
 

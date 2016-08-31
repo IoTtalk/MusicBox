@@ -21,7 +21,7 @@ app.get("/", function (req, res) {
 app.get("/musicBoxHidden",function (req,res) {
     pageGen.Page.getMusicBoxHiddenPage(req,res,msgHandler.getSpeaknum());
 });
-app.get("/musicBoxController", function (req, res) {
+app.get("/mboxctl", function (req, res) {
     pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList,msgHandler.getCtlDefaultValObj());
 });
 

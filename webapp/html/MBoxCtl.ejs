@@ -16,11 +16,11 @@
         var IDFList = ("<%= IDFList %>").split(',');
 
     </script>
-    <script src="../js/MusicBoxController.js" type="text/javascript"></script>
+    <script src="../js/MBoxCtl.js" type="text/javascript"></script>
 
 
     <link href="../css/semantic.css" rel="stylesheet" type="text/css">
-    <link href="../css/MusicBoxController.css" rel="stylesheet" type="text/css">
+    <link href="../css/MBoxCtl.css" rel="stylesheet" type="text/css">
     <link href="../css/player.css" rel="stylesheet">
 </head>
 <body>
@@ -29,9 +29,9 @@
     <div id="navigateBar">
         <div class="ui selection dropdown" id="c">
             <div class="dropdownTitle"><span>C</span></div>
-            <input type="hidden" name="C" value="<%= ctlDefaultValObj.C %>">
+            <input type="hidden" name="C">
             <!--<i class="dropdown icon"></i>-->
-            <div class="default text" align="center"></div>
+            <div class="default text" align="center" id="cVal"><%= ctlDefaultValObj.C %></div>
             <div class="menu">
                 <div class="item C">1</div>
                 <div class="item C">2</div>
@@ -44,10 +44,10 @@
         </div>
         <div class="ui selection dropdown" id="n">
             <!--<div class="dropdownTitle"><span>N:</span></div>-->
-            <input type="hidden" name="n" value="<%= ctlDefaultValObj.N %>">
+            <input type="hidden" name="n">
             <!--<i class="dropdown icon"></i>-->
             <div class="dropdownTitle"><span>N</span></div>
-            <div class="default text" align="center"></div>
+            <div class="default text" align="center" id="nVal"><%= ctlDefaultValObj.N%></div>
             <div class="menu">
                 <div class="item inputN">1</div>
                 <div class="item inputN">2</div>
@@ -63,10 +63,10 @@
         </div>
         <div class="ui selection dropdown" id="mode">
             <!--<div class="dropdownTitle"><span>N:</span></div>-->
-            <input type="hidden" name="mode" value="<%= ctlDefaultValObj.Mode %>">
+            <input type="hidden" name="mode">
             <!--<i class="dropdown icon"></i>-->
             <div class="dropdownTitle"><span>Mode</span></div>
-            <div class="default text" align="center"></div>
+            <div class="default text" align="center" id="modeVal"><%= ctlDefaultValObj.Mode %></div>
             <div class="menu">
                 <div class="item inputMode">0</div>
                 <div class="item inputMode">1</div>
@@ -74,9 +74,9 @@
         </div>
         <div class="ui selection dropdown" id="period">
             <div class="dropdownTitle"><span>Period</span></div>
-            <input type="hidden" name="Period" value="<%= ctlDefaultValObj.Period %>">
+            <input type="hidden" name="Period">
             <!--<i class="dropdown icon"></i>-->
-            <div class="default text" align="center"></div>
+            <div class="default text" align="center" id="periodVal"><%= ctlDefaultValObj.Period %></div>
             <div class="menu">
                 <div class="item inputPeriod">20</div>
                 <div class="item inputPeriod">30</div>

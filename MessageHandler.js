@@ -69,6 +69,12 @@ var msgHandler = (function () {
 
     };
     var sendSong = function () {
+
+        // find all iOS socket connection and send light signal without songPart,
+        // because iOS is not support tonejs
+        // for(var i = 0; i < iOSClient.length; i++)
+        //     servio.to(iOSClient[i].id).emit('Luminance-O',1);
+
         addNoteToSongEnd(song.songPart);
         for(var i = 0; i < C; i++){
             // console.log(N-space[i]);
@@ -289,9 +295,9 @@ var msgHandler = (function () {
 
             console.log( odf_name+":"+ data );
             obj = data[0];
-            if(obj == "bug") {
-                return;
-            }
+            // if(obj == "bug") {
+            //     return;
+            // }
             switch (odf_name){
                 case "Music-O":
                     reset();
@@ -342,10 +348,10 @@ var msgHandler = (function () {
         },
         getCtlDefaultValObj:function () {
             return  {
-                C:C,
-                N:N,
+                C:C + " cluster",
+                N:N + " spaces",
                 Mode:mode,
-                Period:period
+                Period:period+ " notes"
             };
         }
     };

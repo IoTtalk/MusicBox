@@ -24,6 +24,9 @@
 .ui.dropdown > .text{
     color: #f0e68c;
  }
+.ui.dropdown:not(.button) > .default.text{
+    color: #f0e68c;
+}
 .playerControl{
     width: 240px;
     margin: auto;
