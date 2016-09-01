@@ -145,26 +145,28 @@ $(function () {
         $(this).unbind('click');
         $(this).attr('class', 'pause');
         $(this).bind('click',pause);
-        socket.emit('ctl','play');
+        socket.emit('ctl',{name:'play'});
     };
     var pause = function(){
         $(this).unbind('click');
         $(this).attr('class', 'play');
         $(this).bind('click',play);
-        socket.emit('ctl','pause');
+        socket.emit('ctl',{name:'pause'});
 
     };
     $(".play").bind('click',play);
 
-
+    var repeatSong = false;
     $(".repeat").click(function(){
-        var currentIndx = -1;
-        $(".list").each(function(index){
-            if($(this).prop("active") == true)
-                currentIndx = index;
-        });
-        if(currentIndx != -1)
-            activeSongListByIndex(currentIndx);
+        // var currentIndx = -1;
+        // $(".list").each(function(index){
+        //     if($(this).prop("active") == true)
+        //         currentIndx = index;
+        // });
+        // if(currentIndx != -1)
+        //     activeSongListByIndex(currentIndx);
+        repeatSong = !repeatSong;
+        socket.emit('ctl',{name:'repeatSong',value:repeatSong});
     });
     $(".bar").change(function(){
         // dan.push("Volume-I",["bug"]);

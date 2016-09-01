@@ -2,18 +2,21 @@ var color = require('./ShareVariables').color;
 
 var msgHandler = (function () {
 
-    var song = null;
-    var songId = -1;
-    var playing = false;
-    var head = 0;
-    var period = 20;
-    var volume  = 0;
-    var room = 0;
-    var C = 7;
-    var N = 5;
-    var mode = 0;
-    var space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,N);
-    var servio = null;
+    var song = null,
+        rawSong = null,
+        songId = -1,
+        playing = false,
+        repeatSong = false,
+        head = 0,
+        period = 20,
+        volume  = 0,
+        room = 0,
+        C = 7,
+        N = 5,
+        mode = 0,
+        space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,N),
+        servio = null;
+
     var partition = function (len) {
         var r;
         if (head < len) {
@@ -74,7 +77,7 @@ var msgHandler = (function () {
         // because iOS is not support tonejs
         // for(var i = 0; i < iOSClient.length; i++)
         //     servio.to(iOSClient[i].id).emit('Luminance-O',1);
-
+        head = song.songPart.length;
         addNoteToSongEnd(song.songPart);
         for(var i = 0; i < C; i++){
             // console.log(N-space[i]);
@@ -92,6 +95,7 @@ var msgHandler = (function () {
                 servio.sockets.in(i).emit('Music-O', {songPart:song.songPart,mode:1});
             }
         }
+
     };
     var reset = function () {
         playing = false;
@@ -261,13 +265,34 @@ var msgHandler = (function () {
                     //make iOS MusicBox dark if there are some sockets light last turn.
                     for(var i = 0; i < iOSClient.length; i++)
                         servio.to(iOSClient[i].id).emit("Luminance-O",0);
-
-                    // console.log(ackRoomLastNoteIndex+" "+head);
-                    if(ackRoomLastNoteIndex == head)
+                    //repeatSong for mode 0
+                    if(repeatSong && mode == 0 && head == song.songPart.length ) {
+                        reset();
+                        servio.sockets.emit("switchSong");
+                        song = JSON.parse(JSON.stringify(rawSong));
+                        addIndexToSongPart(song.songPart);
                         sendNotes();
+                        console.log('repeat');
+                        return;
+                    }
+                    //repeatSong for mode 1
+                    if(repeatSong && mode == 1 && head == song.songPart.length-1) {
+                        reset();
+                        servio.sockets.emit("switchSong");
+                        song = JSON.parse(JSON.stringify(rawSong));
+                        addIndexToSongPart(song.songPart);
+                        sendSong();
+                        console.log('repeat');
+                        return;
+                    }
+
+                    //partEndAck for mode 0
+                    if(mode == 0 && ackRoomLastNoteIndex == head)
+                        sendNotes();
+
                 });
 
-                socket.on('receiveSongAck',function () {
+                socket.on('receivePlayMode1Ack',function () {
                     //calculate established socket number
                     receiveSongAckNum++;
                     var socketNum = 0;
@@ -280,12 +305,16 @@ var msgHandler = (function () {
                 });
 
                 socket.on('ctl',function(cmd){
-                    switch(cmd){
+                    switch(cmd.name){
                         case "pause":
                             servio.sockets.emit("pause");
                             break;
                         case "play":
                             servio.sockets.emit("play");
+                            break;
+                        case "repeatSong":
+                            repeatSong = cmd.value;
+                            console.log("repeatSong: " + repeatSong);
                             break;
                     }
                 });
@@ -294,14 +323,18 @@ var msgHandler = (function () {
         pull:function (odf_name, data) {
 
             console.log( odf_name+":"+ data );
-            obj = data[0];
+            var obj = data[0];
             // if(obj == "bug") {
             //     return;
             // }
             switch (odf_name){
                 case "Music-O":
                     reset();
+                    // song = JSON.parse(JSON.stringify(obj));
                     song = obj;
+                    //copy obj by using JSON parse and stringify
+                    //rawSong will be used when replay the song
+                    rawSong = JSON.parse(JSON.stringify(obj));
                     // console.log(song);
                     if (songId != -1) {
                         console.log("switch song!");
@@ -311,7 +344,6 @@ var msgHandler = (function () {
                     addIndexToSongPart(song.songPart);
                     if(mode == 0)
                         sendNotes();
-
                     else if(mode == 1)
                         sendSong();
 

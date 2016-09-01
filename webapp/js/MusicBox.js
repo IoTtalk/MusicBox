@@ -64,18 +64,22 @@ MusicOut.prototype = {
     },
 
     changeKey:function (noteName,scale) {
-
         var c;
-        if(noteName.charAt(1) == "#")
+        if(noteName.charAt(1) == "#"){
             c = parseInt(noteName.charAt(2));
-        else
+            c+=scale;
+            if(c > 8) c = 8;
+            if(c < 1) c = 1;
+            noteName = noteName.substr(0, 1) + "#" + c;
+        }
+
+        else {
             c = parseInt(noteName.charAt(1));
-
-        c+=scale;
-
-        if(c > 8) c = 8;
-        if(c < 1) c = 1;
-        noteName = noteName.substr(0, 1) + c + noteName.substr(2);
+            c+=scale;
+            if(c > 8) c = 8;
+            if(c < 1) c = 1;
+            noteName = noteName.substr(0, 1) + c;
+        }
         return noteName;
     },
 
@@ -229,7 +233,7 @@ $(document).ready(function () {
     //ODF command from MBoxCtl
     socket.on("Music-O", function (obj) {
         console.log("receive");
-        console.log("Music:"+obj);
+        console.log("Music:"+JSON.stringify(obj));
         //copy obj by using JSON parse and stringify
         //musicObj will be used to construct music when audio context time out.
         musicObj = JSON.parse(JSON.stringify(obj));
@@ -237,7 +241,7 @@ $(document).ready(function () {
         //if mode equals 1 need to synchronize with MusicBox Server first
         //the actual start time of music will be the moment that receive playMode1 from MusicBox Server.
         if(obj.mode == 1) {
-            socket.emit("receiveSongAck");
+            socket.emit("receivePlayMode1Ack");
             return;
         }
         music.start();
@@ -332,6 +336,7 @@ $(document).ready(function () {
             Tone.Transport.start();
         }
     });
+
     socket.on("playMode1",function () {
         console.log('start');
         music.start();
