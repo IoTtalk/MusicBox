@@ -231,9 +231,9 @@ $(document).ready(function () {
     timeStamp = Math.floor(Date.now()/ 1000);
     var musicObj,music;
     //ODF command from MBoxCtl
-    socket.on("Music-O", function (obj) {
+    socket.on("Song-O", function (obj) {
         console.log("receive");
-        console.log("Music:"+JSON.stringify(obj));
+        console.log("Song:"+JSON.stringify(obj));
         //copy obj by using JSON parse and stringify
         //musicObj will be used to construct music when audio context time out.
         musicObj = JSON.parse(JSON.stringify(obj));

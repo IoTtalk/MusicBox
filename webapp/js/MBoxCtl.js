@@ -25,8 +25,7 @@ var toBinary = function (blob) {
     reader.onloadend = function () {
         song = MidiConvert.parseParts(reader.result)[track];
         var obj = {songPart: song, songId: songId};
-        // dan.push("Music-I",["bug"]);
-        dan.push("Music-I",[obj]);
+        dan.push("Song-I",[obj]);
     };
     reader.readAsBinaryString(blob);
 };
@@ -58,37 +57,49 @@ $(function () {
     //ui
     $('#c').dropdown({
         onChange: function(value, text, $selectedItem) {
-            // dan.push("C-I",["bug"]);
             dan.push("C-I",[value]);
-            $("#cVal").text(value + " clusters");
+            $("#cVal").text(value);
         },
         allowReselection: true
     });
     $('#n').dropdown({
         onChange: function(value, text, $selectedItem) {
-            // dan.push("N-I",["bug"]);
             dan.push("N-I",[value]);
-            $("#nVal").text(value + " spaces");
+            $("#nVal").text(value);
+        },
+        allowReselection: true
+    });
+    $('#luminance').dropdown({
+        onChange: function(value, text, $selectedItem) {
+            dan.push("Luminance-I",[value]);
+            $("#luminanceVal").text(value);
         },
         allowReselection: true
     });
     $('#period').dropdown({
         onChange: function(value, text, $selectedItem) {
-            // dan.push("Period-I",["bug"]);
             dan.push("Period-I",[value]);
-            $("#periodVal").text(value + " notes");
+            $("#periodVal").text(value);
         },
         allowReselection: true
     });
-
     $('#mode').dropdown({
         onChange: function(value, text, $selectedItem) {
-            // dan.push("Mode-I",["bug"]);
-            dan.push("Mode-I",[value]);
+            if(value == "sequential")
+                dan.push("Mode-I",[0]);
+            else if(value == "parallel")
+                dan.push("Mode-I",[1]);
+            $("#modeVal").text(value);
         },
         allowReselection: true
     });
-
+    $('#key').dropdown({
+        onChange: function(value, text, $selectedItem) {
+            dan.push("Key-I",[value]);
+            $("#keyVal").text(value);
+        },
+        allowReselection: true
+    });
     var activeSongListByIndex = function(index){
         $(".list").each(function(index){
             if(index&1)

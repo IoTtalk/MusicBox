@@ -13,6 +13,8 @@ var msgHandler = (function () {
         room = 0,
         C = 7,
         N = 5,
+        luminance = 1.0,
+        key = 0,
         mode = 0,
         space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,N),
         servio = null;
@@ -60,7 +62,7 @@ var msgHandler = (function () {
                 var p = part.slice(r.start, r.end);
                 addNoteToSongEnd(p);
                 var o = {songPart: p};
-                servio.sockets.in(room % C).emit('Music-O', o);
+                servio.sockets.in(room % C).emit('Song-O', o);
                 room++;
                 playing = true;
             }
@@ -92,7 +94,7 @@ var msgHandler = (function () {
                     sendFeature('Key-O', scale, i);
                     sendFeature('Volume-O',scale*-2,i);
                 }
-                servio.sockets.in(i).emit('Music-O', {songPart:song.songPart,mode:1});
+                servio.sockets.in(i).emit('Song-O', {songPart:song.songPart,mode:1});
             }
         }
 
@@ -285,7 +287,6 @@ var msgHandler = (function () {
                         console.log('repeat');
                         return;
                     }
-
                     //partEndAck for mode 0
                     if(mode == 0 && ackRoomLastNoteIndex == head)
                         sendNotes();
@@ -328,12 +329,12 @@ var msgHandler = (function () {
             //     return;
             // }
             switch (odf_name){
-                case "Music-O":
+                case "Song-O":
                     reset();
-                    // song = JSON.parse(JSON.stringify(obj));
                     song = obj;
-                    //copy obj by using JSON parse and stringify
-                    //rawSong will be used when replay the song
+                    // copy obj by using JSON parse and stringify
+                    song = JSON.parse(JSON.stringify(obj));
+                    // rawSong will be used when replay the song
                     rawSong = JSON.parse(JSON.stringify(obj));
                     // console.log(song);
                     if (songId != -1) {
@@ -350,6 +351,7 @@ var msgHandler = (function () {
                     break;
                 case "Key-O":
                     sendFeature(odf_name,obj);
+                    key = parseInt(obj);
                     break;
                 case "Volume-O":
                     sendFeature(odf_name,obj);
@@ -357,6 +359,7 @@ var msgHandler = (function () {
                     break;
                 case "Luminance-O":
                     sendFeature(odf_name,obj);
+                    Luminance = parseInt(obj);
                     break;
                 case "Period-O":
                     period = parseInt(obj);
@@ -375,15 +378,22 @@ var msgHandler = (function () {
                     break;
             }
         },
-        getSpeaknum:function () {
+        getC:function () {
             return C;
         },
         getCtlDefaultValObj:function () {
+            var modeName;
+            if(mode == 0)
+                modeName = "sequential";
+            else if(mode == 1)
+                modeName = "parallel";
             return  {
-                C:C + " cluster",
-                N:N + " spaces",
-                Mode:mode,
-                Period:period+ " notes"
+                C:C,
+                N:N,
+                Mode:modeName,
+                Period:period,
+                Luminance:luminance,
+                Key:key
             };
         }
     };

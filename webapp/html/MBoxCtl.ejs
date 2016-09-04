@@ -30,7 +30,6 @@
         <div class="ui selection dropdown" id="c">
             <div class="dropdownTitle"><span>C</span></div>
             <input type="hidden" name="C">
-            <!--<i class="dropdown icon"></i>-->
             <div class="default text" align="center" id="cVal"><%= ctlDefaultValObj.C %></div>
             <div class="menu">
                 <div class="item C">1</div>
@@ -43,9 +42,7 @@
             </div>
         </div>
         <div class="ui selection dropdown" id="n">
-            <!--<div class="dropdownTitle"><span>N:</span></div>-->
             <input type="hidden" name="n">
-            <!--<i class="dropdown icon"></i>-->
             <div class="dropdownTitle"><span>N</span></div>
             <div class="default text" align="center" id="nVal"><%= ctlDefaultValObj.N%></div>
             <div class="menu">
@@ -61,21 +58,36 @@
                 <div class="item inputN">10</div>
             </div>
         </div>
+        <div class="ui selection dropdown" id="luminance">
+            <input type="hidden" name="luminance">
+            <div class="dropdownTitle"><span>Luminance</span></div>
+            <div class="default text" align="center" id="luminanceVal"><%= ctlDefaultValObj.Luminance%></div>
+            <div class="menu">
+                <div class="item inputLuminance">0.0</div>
+                <div class="item inputLuminance">0.1</div>
+                <div class="item inputLuminance">0.2</div>
+                <div class="item inputLuminance">0.3</div>
+                <div class="item inputLuminance">0.4</div>
+                <div class="item inputLuminance">0.5</div>
+                <div class="item inputLuminance">0.6</div>
+                <div class="item inputLuminance">0.7</div>
+                <div class="item inputLuminance">0.8</div>
+                <div class="item inputLuminance">0.9</div>
+                <div class="item inputLuminance">1.0</div>
+            </div>
+        </div>
         <div class="ui selection dropdown" id="mode">
-            <!--<div class="dropdownTitle"><span>N:</span></div>-->
             <input type="hidden" name="mode">
-            <!--<i class="dropdown icon"></i>-->
             <div class="dropdownTitle"><span>Mode</span></div>
             <div class="default text" align="center" id="modeVal"><%= ctlDefaultValObj.Mode %></div>
             <div class="menu">
-                <div class="item inputMode">0</div>
-                <div class="item inputMode">1</div>
+                <div class="item inputMode">sequential</div>
+                <div class="item inputMode">parallel</div>
             </div>
         </div>
         <div class="ui selection dropdown" id="period">
             <div class="dropdownTitle"><span>Period</span></div>
             <input type="hidden" name="Period">
-            <!--<i class="dropdown icon"></i>-->
             <div class="default text" align="center" id="periodVal"><%= ctlDefaultValObj.Period %></div>
             <div class="menu">
                 <div class="item inputPeriod">20</div>
@@ -91,6 +103,20 @@
                 <div class="item inputPeriod">120</div>
             </div>
         </div>
+        <div class="ui selection dropdown" id="key">
+            <div class="dropdownTitle"><span>Key</span></div>
+            <input type="hidden" name="Key">
+            <div class="default text" align="center" id="keyVal"><%= ctlDefaultValObj.Key %></div>
+            <div class="menu">
+                <div class="item inputKey">-3</div>
+                <div class="item inputKey">-2</div>
+                <div class="item inputKey">-1</div>
+                <div class="item inputKey">0</div>
+                <div class="item inputKey">1</div>
+                <div class="item inputKey">2</div>
+                <div class="item inputKey">3</div>
+            </div>
+        </div>
     </div>
     <div id="listContainer" class="playlistContainer">
         <ul id="playListContainer">
@@ -103,17 +129,12 @@
     <div id="playerContainer">
         <div class="playerControl">
             <ul class="controls">
-                <!-- <li><a href="#" class="shuffle shuffleActive" data-attr="shuffled"></a></li> -->
                 <li><a href="#" class="left"></a></li>
                 <li><a href="#" class="play"></a></li>
                 <li><a href="#" class="right"></a></li>
                 <li><a href="#" class="repeat"></a></li>
             </ul>
         </div>
-        <!-- <div class="audioDetails">
-            <span class="songPlay"></span>
-            <span data-attr="timer" class="audioTime"></span>
-        </div> -->
         <div class="progress">
             <div data-attr="seekableTrack" class="seekableTrack"></div>
             <div class="updateProgress"></div>

@@ -16,10 +16,10 @@ console.log(iottalkIP);
 app.use(express.static("./webapp"));
 
 app.get("/", function (req, res) {
-    pageGen.Page.getMusicBoxPage(req,res,msgHandler.getSpeaknum());
+    pageGen.Page.getMusicBoxPage(req,res,msgHandler.getC());
 });
 app.get("/musicBoxHidden",function (req,res) {
-    pageGen.Page.getMusicBoxHiddenPage(req,res,msgHandler.getSpeaknum());
+    pageGen.Page.getMusicBoxHiddenPage(req,res,msgHandler.getC());
 });
 app.get("/mboxctl", function (req, res) {
     pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList,msgHandler.getCtlDefaultValObj());

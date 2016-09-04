@@ -4,7 +4,7 @@
     margin-bottom: 20px;
 }
 .ui.selection.dropdown{
-    min-width: 20%;
+    min-width: 2%;
     min-height:40px;
     padding: 0;
     border: 0;
@@ -23,9 +23,11 @@
 }
 .ui.dropdown > .text{
     color: #f0e68c;
+    width: 100%;
  }
 .ui.dropdown:not(.button) > .default.text{
     color: #f0e68c;
+    width: 100%;
 }
 .playerControl{
     width: 240px;
@@ -49,4 +51,10 @@ body {
 }
 .ui.selection.dropdown .menu > .item{
     text-align: center;
+}
+#c{
+    border-top-left-radius: 10px;
+}
+#key{
+    border-top-right-radius: 10px;
 }
