@@ -35,7 +35,7 @@ ul, li { list-style: none; }
 .right { background: url('./audio_icons.png') no-repeat -88px -75px; width: 24px; height: 24px; margin:auto; margin-top:4px; }
 .right:not(.disabled):hover { opacity:1; }
 .repeat { background: url('./audio_icons.png') no-repeat -4px -103px; width: 21px; height: 21px; margin:auto; margin-top:7px; }
-/*.repeat:hover, .repeat.loopActive { background: url('./audio_icons.png') no-repeat -4px -79px; }*/
+.repeat:hover, .repeat.loopActive { background: url('./audio_icons.png') no-repeat -4px -79px; }
 .volume { width: 20px; height: 20px; margin-left:5px; margin-right:5px; float:left; background: url('./audio_icons.png') no-repeat; }
 .volume1 { background-position: -5px -150px; }
 .volume2 { background-position: -5px -198px; }

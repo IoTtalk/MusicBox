@@ -171,8 +171,6 @@ MusicOut.prototype = {
                     MusicOut.prototype.changeVolume(MusicOut.prototype.volume);
                     if(!MusicOut.prototype.mute)
                         MusicOut.prototype.synthesizerPoly.triggerAttackRelease(note.noteName, note.duration, time, note.velocity);
-                    // console.log('start');
-                    // console.log(note.index + " " + note.noteName);
                     $("#note").text("Note:" + note.noteName);
                 }
 

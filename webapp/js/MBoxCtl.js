@@ -49,7 +49,7 @@ $(function () {
     macAddr = (lastParameter == "smboxctl") ? "Share" : genMacAddr();
 
     document.title = 'MBoxCtl(' + macAddr+')';
-    
+
     dan.init(pull, 'http://' + iottalkIP , macAddr, {
         'dm_name': 'MBoxCtl',
         'u_name': 'yb',
@@ -176,6 +176,10 @@ $(function () {
     var repeatSong = false;
     $(".repeat").click(function(){
         repeatSong = !repeatSong;
+        if(repeatSong)
+            $(this).addClass("loopActive");
+        else
+            $(this).removeClass("loopActive");
         socket.emit('ctl',{name:'repeatSong',value:repeatSong});
     });
     $(".bar").change(function(){
