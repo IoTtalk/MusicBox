@@ -183,7 +183,6 @@ $(function () {
         socket.emit('ctl',{name:'repeatSong',value:repeatSong});
     });
     $(".bar").change(function(){
-        // dan.push("Volume-I",["bug"]);
         dan.push("Volume-I",[this.value]);
     });
 

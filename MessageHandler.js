@@ -82,10 +82,10 @@ var msgHandler = (function () {
         head = song.songPart.length;
         addNoteToSongEnd(song.songPart);
         for(var i = 0; i < C; i++){
-            // console.log(N-space[i]);
+
             if(N-space[i] > 0){
                 var scale = Math.ceil(i/2);
-                // console.log(scale);
+
                 if(i%2) {
                     sendFeature('Key-O', scale*-1, i);
                     sendFeature('Volume-O', scale*2, i);
@@ -135,7 +135,6 @@ var msgHandler = (function () {
                 break;
             }
         }
-            // console.log('next play: '+ room%C);
         if(i == C)
             return false;
         else
@@ -180,11 +179,7 @@ var msgHandler = (function () {
                         socket.room = room;
                         socket.iOS = true;
                         iOSClient.push(socket);
-                        // space[room]--;
-                        // space[room] = (space[room] < 0)? 0 : space[room];
-                        // servio.sockets.emit('changeSpace',space);
                         servio.to(socket.id).emit("join", {message:"approve",room:room});
-                        // servio.sockets.in(room).emit("counter",N-space[room]);
                     }
                     else
                         servio.to(socket.id).emit("join",{message:"disapprove"});
@@ -199,10 +194,9 @@ var msgHandler = (function () {
                     var roomId = roomId.toString();
                     var rooms = Object.keys(io.sockets.adapter.rooms);
 
-                    if(rooms.indexOf(roomId) != -1) {
-                        // console.log(io.sockets.adapter.rooms[roomId]);
+                    if(rooms.indexOf(roomId) != -1)
                         return io.sockets.adapter.rooms[roomId];
-                    }
+
                     return null;
                 };
                 var findSocketRoom = function(socket)  {
@@ -221,13 +215,8 @@ var msgHandler = (function () {
                     var room;
                     if(socket.iOS) {
                         room = socket.room;
-                        // console.log('iOS close' + room);
                         if(room == undefined)
                             return;
-                        // space[room]++;
-                        // space[room] = (space[room] > N)? N : space[room];
-                        // servio.sockets.emit('changeSpace',space);
-                        // servio.sockets.in(room).emit("counter",N-space[room]);
                         //remove iOS socket from iOSClient array
                         var index = iOSClient.indexOf(socket);
                         if (index > -1)
@@ -235,7 +224,6 @@ var msgHandler = (function () {
                     }
                     else{
                         room = findSocketRoom(socket);
-                        // console.log(room + ' close');
                         if(room == -1)
                             return;
                         socket.leave(room);
@@ -253,12 +241,10 @@ var msgHandler = (function () {
                             if (playMsg != null && playMsg.room == room
                                 && playMsg.state == "started" && (N - space[room]) == 0) {
                                 head = playMsg.noteIndex - 1;
-                                // console.log(head);
                                 sendNotes();
                             }
                         }
                     }
-                    // console.log('close:'+room);
                     Object.getPrototypeOf(this).onclose.call(this, reason);
                 };
 
@@ -325,9 +311,7 @@ var msgHandler = (function () {
 
             console.log( odf_name+":"+ data );
             var obj = data[0];
-            // if(obj == "bug") {
-            //     return;
-            // }
+
             switch (odf_name){
                 case "Song-O":
                     reset();
@@ -336,7 +320,7 @@ var msgHandler = (function () {
                     song = JSON.parse(JSON.stringify(obj));
                     // rawSong will be used when replay the song
                     rawSong = JSON.parse(JSON.stringify(obj));
-                    // console.log(song);
+
                     if (songId != -1) {
                         console.log("switch song!");
                         servio.sockets.emit("switchSong");

@@ -4,5 +4,3 @@ exports.color = ['#dc143c', '#00bfff', '#ffd700', '#3cb371', '#1e90ff',
 exports.IDFList =  ['Song-I','Luminance-I','Key-I','Volume-I','Period-I','Mode-I','N-I','C-I'];
 
 exports.ODFList = ['Song-O','Luminance-O','Key-O','Volume-O','Period-O','Mode-O','N-O','C-O'];
-
-
