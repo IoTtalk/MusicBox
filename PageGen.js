@@ -2,7 +2,6 @@ var fs = require('fs'),
     ejs = require('ejs'),
     color = require('./ShareVariables').color,
     musicBoxDir = __dirname + "/webapp/html/MusicBox.ejs",
-    musicBoxHiddenDir = __dirname + "/webapp/html/MusicBoxHidden.ejs",
     mBoxCtlDir = __dirname + "/webapp/html/MBoxCtl.ejs",
     midiDir = __dirname + "/webapp/midi";
 
@@ -15,39 +14,6 @@ Page.prototype = {
                 console.log(err);
             else {
                 fs.readFile(musicBoxDir,
-                    function (err, contents) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        else {
-                            contents = contents.toString('utf8');
-                            res.writeHead(200, {"Content-Type": "text/html"});
-                            var columnNum = 3;
-                            var tr = [];
-                            var colorIndex = 0;
-                            for (var i = 0; i < Math.ceil(speakerNum / columnNum); i++) {
-                                var td = [];
-                                for (var j = 0; j < columnNum; j++) {
-                                    if (colorIndex < speakerNum)
-                                        td.push(color[colorIndex++]);
-                                }
-                                tr.push(td);
-                            }
-                            // console.log({tr:tr,space:space});
-                            res.end(ejs.render(contents, {tr: tr}));
-                        }
-                    }
-                );
-            }
-
-        });
-    },
-    getMusicBoxHiddenPage: function (req, res, speakerNum) {
-        readAllSongInDir(midiDir, function (err) {
-            if (err)
-                console.log(err);
-            else {
-                fs.readFile(musicBoxHiddenDir,
                     function (err, contents) {
                         if (err) {
                             console.log(err);

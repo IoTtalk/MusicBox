@@ -21,7 +21,7 @@ app.get("/", function (req, res) {
 app.get("/musicBoxHidden",function (req,res) {
     pageGen.Page.getMusicBoxHiddenPage(req,res,msgHandler.getC());
 });
-app.get("/mboxctl", function (req, res) {
+app.get("/mboxctl|smboxctl", function (req, res) {
     pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList,msgHandler.getCtlDefaultValObj());
 });
 
@@ -30,18 +30,8 @@ msgHandler.setSocketIo(servio);
 
 server.listen((process.env.PORT || 5566), '0.0.0.0');
 
-
-var genMacAddr = function () {
-    var macAddr = '';
-    for (var i = 0; i < 5; i++)
-        macAddr += '0123456789abcdef'[Math.floor(Math.random() * 16)];
-    return macAddr;
-};
-var macAddr = genMacAddr();
-
-console.log("mac address: "+macAddr);
-
-dan.init(msgHandler.pull, 'http://' + iottalkIP , macAddr, {
+var musicBoxMacAddr = "MusicBoxes";
+dan.init(msgHandler.pull, 'http://' + iottalkIP , musicBoxMacAddr, {
 
     'dm_name': 'MusicBox',
     'u_name': 'yb',
@@ -59,6 +49,9 @@ dan.init(msgHandler.pull, 'http://' + iottalkIP , macAddr, {
     process.on('uncaughtException', dan.deregister);
 
 });
+
+
+
 
 
 

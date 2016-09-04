@@ -37,14 +37,19 @@ $(function () {
     function pull (odf_name, data) {
         console.log( odf_name+":"+ data );
     }
+    var macAddr = '';
     var genMacAddr = function () {
-        var macAddr = '';
+        var addr = '';
         for (var i = 0; i < 5; i++)
-            macAddr += '0123456789abcdef'[Math.floor(Math.random() * 16)];
-        return macAddr;
+            addr += '0123456789abcdef'[Math.floor(Math.random() * 16)];
+        return addr;
     };
-    var macAddr = genMacAddr();
+    var url = window.location.href.split('/');
+    var lastParameter = url[url.length-1];
+    macAddr = (lastParameter == "smboxctl") ? "Share" : genMacAddr();
+
     document.title = 'MBoxCtl(' + macAddr+')';
+    
     dan.init(pull, 'http://' + iottalkIP , macAddr, {
         'dm_name': 'MBoxCtl',
         'u_name': 'yb',
@@ -59,6 +64,7 @@ $(function () {
         onChange: function(value, text, $selectedItem) {
             dan.push("C-I",[value]);
             $("#cVal").text(value);
+            console.log('c'+value);
         },
         allowReselection: true
     });
@@ -169,13 +175,6 @@ $(function () {
 
     var repeatSong = false;
     $(".repeat").click(function(){
-        // var currentIndx = -1;
-        // $(".list").each(function(index){
-        //     if($(this).prop("active") == true)
-        //         currentIndx = index;
-        // });
-        // if(currentIndx != -1)
-        //     activeSongListByIndex(currentIndx);
         repeatSong = !repeatSong;
         socket.emit('ctl',{name:'repeatSong',value:repeatSong});
     });
