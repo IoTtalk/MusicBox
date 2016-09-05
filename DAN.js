@@ -34,7 +34,7 @@ var dan = (function () {
 
     function register (endpoint, profile, callback) {
         profile['d_name'] =
-            profile['dm_name'] + '_' + _mac_addr.slice(_mac_addr.length - 4);
+            profile['dm_name'] + _mac_addr.slice(_mac_addr.length - 5);
         _profile = profile;
         csmapi.set_endpoint(endpoint);
 

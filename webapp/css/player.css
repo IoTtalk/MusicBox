@@ -1,15 +1,15 @@
 * { padding: 0px; margin :0px; }
 body {  font-family: SourceSansPro-Regular, Helvetica, Arial, 'sans-serif'; font-size: 14px;}
 ul, li { list-style: none; }
-.containerPlayer, .containerSource { max-width:567.8px; margin: 5% auto;}
-#navigateBar{min-width: 567.8px;height: 40px;margin: auto;background-color:#333333;border-top-right-radius: 10px;border-top-left-radius: 10px;}
+.containerPlayer, .containerSource { max-width:508px; margin: 5% auto;}
+#navigateBar{min-width: 508px;height: 40px;margin: auto;background-color:#333333;border-top-right-radius: 10px;border-top-left-radius: 10px;}
 .snippet { width:250px; border:1px solid #ccc; border-radius:5px; min-height:280px; max-height:280px; color:#fff; background-color:#343434; margin-top:1rem;  }
 .snippet:nth-child(2) { margin-top:2rem; }
 .snippet pre { max-height:230px; padding:5px; }
 .snippet h4 { padding:10px; color:#343434; background-color:#00bd9b; }
 
 /* Playlist */
-#listContainer { min-width: 567.8px; background-color:#fafafa;  }
+#listContainer { min-width: 508px; background-color:#fafafa;  }
 #listContainer ul { background-color: #fafafa; clear: both; cursor: pointer;  }
 #listContainer li { padding:10px; text-align: center; font-size: x-large;}
 #listContainer li:nth-child(even) { background-color:#efefef; }
@@ -19,7 +19,7 @@ ul, li { list-style: none; }
 
 
 /* Player Controls */
-#playerContainer { min-width: 567.8px; height:100px; background-color:#333333;  border-bottom-right-radius:10px;border-bottom-left-radius:10px}
+#playerContainer { min-width: 508px; height:100px; background-color:#333333;  border-bottom-right-radius:10px;border-bottom-left-radius:10px}
 .controls li:first{margin-right:10px}
 .controls li { float:left; display:inline-block; width:50px; text-align:center; margin-top:8px;margin-left:10px }
 .controls li a { display:inline-block; }
