@@ -30,8 +30,15 @@ msgHandler.setSocketIo(servio);
 
 server.listen((process.env.PORT || 5566), '0.0.0.0');
 
-var musicBoxMacAddr = "MusicBoxes";
-dan.init(msgHandler.pull, 'http://' + iottalkIP , musicBoxMacAddr, {
+var genMacAddr = function () {
+    var addr = '';
+    for (var i = 0; i < 5; i++)
+        addr += '0123456789abcdef'[Math.floor(Math.random() * 16)];
+    return addr;
+};
+var macAddr = genMacAddr();
+console.log('mac address:' + macAddr);
+dan.init(msgHandler.pull, 'http://' + iottalkIP , macAddr, {
 
     'dm_name': 'MusicBox',
     'u_name': 'yb',

@@ -341,7 +341,7 @@ var msgHandler = (function () {
                     sendFeature(odf_name,obj);
                     volume = parseInt(obj);
                     break;
-                case "Luminance-O":
+                case "L-O":
                     sendFeature(odf_name,obj);
                     Luminance = parseInt(obj);
                     break;
@@ -376,7 +376,7 @@ var msgHandler = (function () {
                 N:N,
                 Mode:modeName,
                 Period:period,
-                Luminance:luminance,
+                L:luminance,
                 Key:key
             };
         }

@@ -260,14 +260,14 @@ $(document).ready(function () {
         MusicOut.prototype.instrumentIndex = parseInt(obj);
         console.log("Instrument:"+obj);
     });
-    socket.on("Luminance-O",function(obj){
+    socket.on("L-O",function(obj){
         var lum = parseInt(obj);
         if(lum)
             $("body").css("background",color[MusicOut.prototype.room]);
         else
             $("body").css("background","#000000");
 
-        console.log("Luminance:"+obj)
+        console.log("L:"+obj)
     });
     //deal with room space
     socket.on("counter",function(num){

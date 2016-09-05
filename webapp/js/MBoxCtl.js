@@ -75,10 +75,10 @@ $(function () {
         },
         allowReselection: true
     });
-    $('#luminance').dropdown({
+    $('#l').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("Luminance-I",[value]);
-            $("#luminanceVal").text(value);
+            dan.push("L-I",[value]);
+            $("#lVal").text(value);
         },
         allowReselection: true
     });

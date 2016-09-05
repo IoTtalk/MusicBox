@@ -13,13 +13,13 @@ Besides, MusicBox need port `5566`, make sure that you don't have web server or 
 
 1) Install dependency of MusicBox packages
 ```
-cd into the path of your MusicBox directory
+cd path_of_your_MusicBox_directory
 npm install
 ```
 2) Start up the MusicBox
 
 ```
-cd  path_of_your_MusicBox_directory
+cd path_of_your_MusicBox_directory
 nodejs Server.js "IoTtalk_ip_address:9999"
 ```
 
@@ -44,7 +44,7 @@ The MusicBox IoT application consists of a set of mobile devices who collaborate
 ### Device Feature meaning 
 - C: an integer that represents the number of clusters
 - N: an integer that represents the number of the players in a cluster
-- Luminance: a float number L that represents the luminance intensity of the lights
+- L: a float number that represents the luminance intensity of the lights
 - Song: a JSON-format object representing a MIDI file
 - Mode: an integer representing the playing mode. In the sequential mode, the server cuts a song into I P-second segments, and the players sequentially perform the music segment in rotation. For 1<=c<=C and 1<=i <=I, Every player in cluster c performs segment if c= (i mode C). In the parallel mode, the server sends a song to all Players simultaneously then the Players perform the song in parallel.
 - Period: an integer P representing the length of a music segment
