@@ -291,20 +291,6 @@ var msgHandler = (function () {
                     }
                 });
 
-                socket.on('ctl',function(cmd){
-                    switch(cmd.name){
-                        case "pause":
-                            servio.sockets.emit("pause");
-                            break;
-                        case "play":
-                            servio.sockets.emit("play");
-                            break;
-                        case "repeatSong":
-                            repeatSong = cmd.value;
-                            console.log("repeatSong: " + repeatSong);
-                            break;
-                    }
-                });
             });
         },
         pull:function (odf_name, data) {
@@ -379,6 +365,9 @@ var msgHandler = (function () {
                 L:luminance,
                 Key:key
             };
+        },
+        setRepeatSong:function (r) {
+            repeatSong = Boolean(r);
         }
     };
 })();

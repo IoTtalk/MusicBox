@@ -165,7 +165,6 @@ var dan = (function () {
         _registered = false;
         csmapi.deregister(_mac_addr, callback);
     }
-
     return {
         'init': init,
         'register': register,

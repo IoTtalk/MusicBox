@@ -37,7 +37,7 @@ $(function () {
     function pull (odf_name, data) {
         console.log( odf_name+":"+ data );
     }
-    var macAddr = '';
+    var macAddr;
     var genMacAddr = function () {
         var addr = '';
         for (var i = 0; i < 5; i++)
@@ -48,6 +48,7 @@ $(function () {
     var lastParameter = url[url.length-1];
     macAddr = (lastParameter == "smboxctl") ? "Share" : genMacAddr();
 
+    socket.emit("mboxctlMacAddr",macAddr);
     document.title = 'MBoxCtl(' + macAddr+')';
 
     dan.init(pull, 'http://' + iottalkIP , macAddr, {
@@ -187,6 +188,4 @@ $(function () {
     });
 
 });
-window.onbeforeunload = function(){
-    dan.deregister();
-};
+

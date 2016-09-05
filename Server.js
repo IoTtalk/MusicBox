@@ -6,6 +6,7 @@ var express = require("express"),
     MidiConvert = require("./MidiConvert"),
     dan = require("./DAN").dan,
     msgHandler = require("./MessageHandler").msgHandler,
+    mboxctlHandler = require("./MBoxCtlHandler").mboxctlHandler,
     ODFList = require("./ShareVariables").ODFList,
     IDFList = require("./ShareVariables").IDFList;
 
@@ -27,6 +28,7 @@ app.get("/mboxctl|smboxctl", function (req, res) {
 
 
 msgHandler.setSocketIo(servio);
+mboxctlHandler.setSocketIo(servio);
 
 server.listen((process.env.PORT || 5566), '0.0.0.0');
 
