@@ -48,7 +48,7 @@ var msgHandler = (function () {
         // because iOS is not support tonejs
         for(var i = 0; i < iOSClient.length; i++){
             if(iOSClient[i].room == (room%C)){
-                servio.to(iOSClient[i].id).emit('Luminance-O',1);
+                servio.to(iOSClient[i].id).emit('L-O',1);
             }
         }
         if (song != null){
@@ -78,7 +78,7 @@ var msgHandler = (function () {
         // find all iOS socket connection and send light signal without songPart,
         // because iOS is not support tonejs
         // for(var i = 0; i < iOSClient.length; i++)
-        //     servio.to(iOSClient[i].id).emit('Luminance-O',1);
+        //     servio.to(iOSClient[i].id).emit('L-O',1);
         head = song.songPart.length;
         addNoteToSongEnd(song.songPart);
         for(var i = 0; i < C; i++){
@@ -252,7 +252,7 @@ var msgHandler = (function () {
 
                     //make iOS MusicBox dark if there are some sockets light last turn.
                     for(var i = 0; i < iOSClient.length; i++)
-                        servio.to(iOSClient[i].id).emit("Luminance-O",0);
+                        servio.to(iOSClient[i].id).emit("L-O",0);
                     //repeatSong for mode 0
                     if(repeatSong && mode == 0 && head == song.songPart.length ) {
                         reset();
@@ -329,7 +329,7 @@ var msgHandler = (function () {
                     break;
                 case "L-O":
                     sendFeature(odf_name,obj);
-                    Luminance = parseInt(obj);
+                    luminance = parseInt(obj);
                     break;
                 case "Period-O":
                     period = parseInt(obj);
@@ -338,10 +338,8 @@ var msgHandler = (function () {
                     C = parseInt(obj);
                     break;
                 case "N-O":
-                    var newN = parseInt(obj);
-                    for(var i = 0; i < C; i++)
-                        space[i] = newN - (N - space[i])
-                    N = newN;
+                    N = parseInt(obj);
+                    space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,N)
                     break;
                 case "Mode-O":
                     mode = parseInt(obj);

@@ -1,7 +1,7 @@
 * { padding: 0px; margin :0px; }
 body {  font-family: SourceSansPro-Regular, Helvetica, Arial, 'sans-serif'; font-size: 14px;}
 ul, li { list-style: none; }
-.containerPlayer, .containerSource { max-width:507.8px; margin: 5% auto;}
+.containerPlayer, .containerSource { max-width:507.8px; margin: 5% auto;height:100%}
 #navigateBar{min-width: 507.8px;height: 40px;margin: auto;background-color:#333333;border-top-right-radius: 10px;border-top-left-radius: 10px;}
 .snippet { width:250px; border:1px solid #ccc; border-radius:5px; min-height:280px; max-height:280px; color:#fff; background-color:#343434; margin-top:1rem;  }
 .snippet:nth-child(2) { margin-top:2rem; }
@@ -9,8 +9,8 @@ ul, li { list-style: none; }
 .snippet h4 { padding:10px; color:#343434; background-color:#00bd9b; }
 
 /* Playlist */
-#listContainer { min-width: 507.8px; background-color:#fafafa;  }
-#listContainer ul { background-color: #fafafa; clear: both; cursor: pointer;  }
+#listContainer { min-width: 507.8px; background-color:#fafafa; }
+#listContainer ul { background-color: #fafafa; clear: both; cursor: pointer;  overflow:hidden; overflow-y:scroll;  }
 #listContainer li { padding:10px; text-align: center; font-size: x-large;}
 #listContainer li:nth-child(even) { background-color:#efefef; }
 #listContainer li:hover, #listContainer li:nth-child(even):hover { background-color:#00bd9b; color:#fff; }
@@ -21,7 +21,7 @@ ul, li { list-style: none; }
 /* Player Controls */
 #playerContainer { min-width: 507.8px; height:100px; background-color:#333333;  border-bottom-right-radius:10px;border-bottom-left-radius:10px}
 .controls li:first{margin-right:10px}
-.controls li { float:left; display:inline-block; width:50px; text-align:center; margin-top:8px;margin-left:10px }
+.controls li { float:left; display:inline-block; width:50px; text-align:center; margin-top:8px;margin-left:10px; }
 .controls li a { display:inline-block; }
 .playAudio,.play { background: url('./audio_icons.png') no-repeat -2px -35px; width: 32px; height: 32px; margin:auto; }
 .playAudio:hover { background: url('./audio_icons.png') no-repeat -2px -3px; }
