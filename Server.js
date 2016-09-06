@@ -22,9 +22,11 @@ app.get("/", function (req, res) {
 app.get("/musicBoxHidden",function (req,res) {
     pageGen.Page.getMusicBoxHiddenPage(req,res,msgHandler.getC());
 });
+
 app.get("/mboxctl|smboxctl", function (req, res) {
     pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList,msgHandler.getCtlDefaultValObj());
 });
+
 
 
 msgHandler.setSocketIo(servio);

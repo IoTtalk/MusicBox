@@ -46,6 +46,8 @@ $(function () {
     };
     var url = window.location.href.split('/');
     var lastParameter = url[url.length-1];
+    lastParameter = (lastParameter == "smboxctl#") ? "smboxctl" :
+        (lastParameter == "mboxctl#")? "mboxctl" : lastParameter;
     macAddr = (lastParameter == "smboxctl") ? "Share" : genMacAddr();
 
     socket.emit("mboxctlMacAddr",macAddr);
