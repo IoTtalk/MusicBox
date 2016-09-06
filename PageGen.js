@@ -41,7 +41,7 @@ Page.prototype = {
 
         });
     },
-    getMBoxCtlPage : function (req, res, iottalkIP,IDFList,ctlDefaultValObj) {
+    getMBoxCtlPage : function (req, res, iottalkIP,IDFList, ctlDefaultValues) {
 
         readAllSongInDir(midiDir, function (err, songNames) {
             if (err)
@@ -63,10 +63,10 @@ Page.prototype = {
                             contents = contents.toString('utf8');
                             res.writeHead(200, {"Content-Type": "text/html"});
                             res.end(ejs.render(contents, {
-                                songs:songs,
+                                songs: songs,
                                 iottalkIP: iottalkIP,
-                                IDFList:IDFList,
-                                ctlDefaultValObj:ctlDefaultValObj
+                                IDFList: IDFList,
+                                ctlDefaultValues: ctlDefaultValues
                             }));
                         }
                     }

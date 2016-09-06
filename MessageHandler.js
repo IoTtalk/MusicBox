@@ -351,7 +351,7 @@ var msgHandler = (function () {
         getC:function () {
             return C;
         },
-        getCtlDefaultValObj:function () {
+        getCtlDefaultValues:function () {
             var modeName;
             if(mode == 0)
                 modeName = "sequential";
@@ -363,7 +363,8 @@ var msgHandler = (function () {
                 Mode:modeName,
                 Period:period,
                 L:luminance,
-                Key:key
+                Key:key,
+                Volume:volume
             };
         },
         setRepeatSong:function (r) {

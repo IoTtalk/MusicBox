@@ -30,7 +30,7 @@
         <div class="ui selection dropdown" id="c">
             <div class="dropdownTitle"><span>C</span></div>
             <input type="hidden" name="C">
-            <div class="default text" align="center" id="cVal"><%= ctlDefaultValObj.C %></div>
+            <div class="default text" align="center" id="cVal"><%= ctlDefaultValues.C %></div>
             <div class="menu">
                 <div class="item C">1</div>
                 <div class="item C">2</div>
@@ -44,7 +44,7 @@
         <div class="ui selection dropdown" id="n">
             <input type="hidden" name="n">
             <div class="dropdownTitle"><span>N</span></div>
-            <div class="default text" align="center" id="nVal"><%= ctlDefaultValObj.N%></div>
+            <div class="default text" align="center" id="nVal"><%= ctlDefaultValues.N%></div>
             <div class="menu">
                 <div class="item inputN">1</div>
                 <div class="item inputN">2</div>
@@ -61,7 +61,7 @@
         <div class="ui selection dropdown" id="l">
             <input type="hidden" name="l">
             <div class="dropdownTitle"><span>L</span></div>
-            <div class="default text" align="center" id="lVal"><%= ctlDefaultValObj.L%></div>
+            <div class="default text" align="center" id="lVal"><%= ctlDefaultValues.L%></div>
             <div class="menu">
                 <div class="item inputL">0.0</div>
                 <div class="item inputL">0.1</div>
@@ -79,7 +79,7 @@
         <div class="ui selection dropdown" id="mode">
             <input type="hidden" name="mode">
             <div class="dropdownTitle"><span>Mode</span></div>
-            <div class="default text" align="center" id="modeVal"><%= ctlDefaultValObj.Mode %></div>
+            <div class="default text" align="center" id="modeVal"><%= ctlDefaultValues.Mode %></div>
             <div class="menu">
                 <div class="item inputMode">sequential</div>
                 <div class="item inputMode">parallel</div>
@@ -88,7 +88,7 @@
         <div class="ui selection dropdown" id="period">
             <div class="dropdownTitle"><span>Period</span></div>
             <input type="hidden" name="Period">
-            <div class="default text" align="center" id="periodVal"><%= ctlDefaultValObj.Period %></div>
+            <div class="default text" align="center" id="periodVal"><%= ctlDefaultValues.Period %></div>
             <div class="menu">
                 <div class="item inputPeriod">20</div>
                 <div class="item inputPeriod">30</div>
@@ -106,7 +106,7 @@
         <div class="ui selection dropdown" id="key">
             <div class="dropdownTitle"><span>Key</span></div>
             <input type="hidden" name="Key">
-            <div class="default text" align="center" id="keyVal"><%= ctlDefaultValObj.Key %></div>
+            <div class="default text" align="center" id="keyVal"><%= ctlDefaultValues.Key %></div>
             <div class="menu">
                 <div class="item inputKey">-3</div>
                 <div class="item inputKey">-2</div>
@@ -141,7 +141,7 @@
         </div>
         <div class="volumeControl">
             <div class="volume volume1"></div>
-            <input class="bar" data-attr="rangeVolume" type="range" min="-10" max="10" step="1" value="0"/>
+            <input class="bar" data-attr="rangeVolume" type="range" min="-10" max="10" step="1" value="<%= ctlDefaultValues.Volume %>"/>
         </div>
 
     </div>

@@ -19,14 +19,11 @@ app.use(express.static("./webapp"));
 app.get("/", function (req, res) {
     pageGen.Page.getMusicBoxPage(req,res,msgHandler.getC());
 });
-app.get("/musicBoxHidden",function (req,res) {
-    pageGen.Page.getMusicBoxHiddenPage(req,res,msgHandler.getC());
-});
 
 app.get("/mboxctl|smboxctl", function (req, res) {
-    pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList,msgHandler.getCtlDefaultValObj());
+    pageGen.Page.getMBoxCtlPage(req,res,iottalkIP,IDFList,
+        msgHandler.getCtlDefaultValues());
 });
-
 
 
 msgHandler.setSocketIo(servio);

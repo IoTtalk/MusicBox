@@ -3,6 +3,7 @@ var song = null;
 var songId = -1;
 var track = 0;
 var socket = io.connect();
+var share = false;
 
 //retrieve file
 var getFileBlob = function (url, cb) {
@@ -49,6 +50,9 @@ $(function () {
     lastParameter = (lastParameter == "smboxctl#") ? "smboxctl" :
         (lastParameter == "mboxctl#")? "mboxctl" : lastParameter;
     macAddr = (lastParameter == "smboxctl") ? "Share" : genMacAddr();
+    share = (macAddr == "Share");
+    if(share)
+        socket.emit("getPlayerControls");
 
     socket.emit("mboxctlMacAddr",macAddr);
     document.title = 'MBoxCtl(' + macAddr+')';
@@ -62,6 +66,41 @@ $(function () {
         console.log('register:', result);
     });
 
+    socket.on("setPlayerControls",function (playerControls) {
+        if(playerControls.songId != -1){
+            $(".list").each(function(index){
+                if(index&1)
+                    $(this).css("background","#efefef");
+                else
+                    $(this).css("background","#fafafa");
+                $(".list").eq(index).prop("active",false);
+            });
+            songId = playerControls.songId;
+            $(".list").eq(songId).prop("active",true);
+            $(".list").eq(songId).css("background","#00bd9b");
+        }
+        if(playerControls.repeatSong)
+            $(".repeat").addClass("loopActive");
+        else
+            $(".repeat").removeClass("loopActive");
+
+        if(playerControls.state == "pause"){
+            var stateBtn = $('.pause');
+            if(stateBtn.length != 0){
+                stateBtn.unbind('click');
+                stateBtn.attr('class', 'play');
+                stateBtn.bind('click',play);
+            }
+        }
+        else{
+            var stateBtn = $('.play');
+            if(stateBtn.length != 0){
+                stateBtn.unbind('click');
+                stateBtn.attr('class', 'pause');
+                stateBtn.bind('click',pause);
+            }
+        }
+    });
     //ui
     $('#c').dropdown({
         onChange: function(value, text, $selectedItem) {
@@ -124,14 +163,15 @@ $(function () {
         songId = index;
         getMidiFile('http://'+window.location.hostname+':5566/'+midiDir+value+'.mid');
 
-        //chang control button to pause icon
-        var controlBtn = $('.play');
-        if(controlBtn.length != 0){
-            controlBtn.unbind('click');
-            controlBtn.attr('class', 'pause');
-            controlBtn.bind('click',pause);
+        //chang state button to pause icon
+        var stateBtn = $('.play');
+        if(stateBtn.length != 0){
+            stateBtn.unbind('click');
+            stateBtn.attr('class', 'pause');
+            stateBtn.bind('click',pause);
         }
-
+        if(share)
+            socket.emit('ctl',{name:'chooseSong',value:songId});
     };
     $(".list").click(function(a) {
         activeSongListByIndex($(".list").index(this));
@@ -162,6 +202,9 @@ $(function () {
         }
     });
     var play = function(){
+        if(songId == -1)
+            activeSongListByIndex(0);
+
         $(this).unbind('click');
         $(this).attr('class', 'pause');
         $(this).bind('click',pause);
@@ -172,7 +215,6 @@ $(function () {
         $(this).attr('class', 'play');
         $(this).bind('click',play);
         socket.emit('ctl',{name:'pause'});
-
     };
     $(".play").bind('click',play);
 
