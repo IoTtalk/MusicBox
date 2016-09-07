@@ -4,7 +4,7 @@
     margin-bottom: 20px;
 }
 .ui.selection.dropdown{
-    min-width: 2%;
+    width: 15%;
     min-height:40px;
     padding: 0;
     border: 0;
@@ -15,27 +15,32 @@
 .ui.selection.dropdown .menu{
     background-color: #dcdcdc;
     max-height: 500px;
+    /*min-width: 12%;*/
+    /*margin: auto;*/
 }
 .dropdownTitle{
-    margin-left: 30px;
-    margin-right: 30px;
+    /*margin-left: 30px;*/
+    /*margin-right: 30px;*/
     margin-top: 10px;
 }
 .ui.dropdown > .text{
     color: #f0e68c;
     width: 100%;
+    margin: auto;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
  }
 .ui.dropdown:not(.button) > .default.text{
     color: #f0e68c;
-    width: 100%;
 }
 .playerControl{
     width: 240px;
     margin: auto;
 }
-span{
-    color: white;
+.featureName{
     text-align: center;
+    color: white;
 }
 .column{
     margin-left: 50px;
@@ -47,14 +52,23 @@ span{
 
 html,
 body {
-    height: 50%;
+    height: 100%;
 }
 .ui.selection.dropdown .menu > .item{
     text-align: center;
 }
 #c{
-    border-top-left-radius: 10px;
+    border-top-left-radius: 15px;
 }
 #key{
-    border-top-right-radius: 10px;
+    border-top-right-radius: 15px;
+}
+#dropdownContainer{
+    margin: auto;
+}
+#volumeFeature{
+    color: white;
+}
+#volumeFeature span {
+    color: #f0e68c;
 }

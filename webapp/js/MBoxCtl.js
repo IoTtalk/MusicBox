@@ -227,9 +227,12 @@ $(function () {
             $(this).removeClass("loopActive");
         socket.emit('ctl',{name:'repeatSong',value:repeatSong});
     });
-    $(".bar").change(function(){
+    $(".volumeBar").change(function(){
         dan.push("Volume-I",[this.value]);
+        $("#volumeFeature span").text(this.value+".0");
     });
+    $("#listContainer ul").css('height',$( window ).height()*0.7);
 
 });
+
 
