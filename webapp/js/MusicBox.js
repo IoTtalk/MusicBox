@@ -37,7 +37,7 @@ MusicOut.prototype = {
 
     currentPlayIndex:-1,
 
-    synthesizerPoly:new Tone.PolySynth(6, Tone.Synth).toMaster(),
+    synthesizerPoly:new Tone.PolySynth(4, Tone.Synth).toMaster(),
 
     synthesizerMono:null,
 
@@ -214,7 +214,7 @@ var refreshAudioCtx = function () {
         audioCtxl = new AudioContext();
         // console.log(audioCtxl);
         Tone.setContext(audioCtxl);
-        MusicOut.prototype.synthesizerPoly = new Tone.PolySynth(6, Tone.Synth).toMaster();
+        MusicOut.prototype.synthesizerPoly = new Tone.PolySynth(4, Tone.Synth).toMaster();
         // console.log('refresh');
         timeStamp = Math.floor(Date.now()/ 1000);
         return true;

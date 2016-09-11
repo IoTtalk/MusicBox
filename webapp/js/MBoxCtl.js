@@ -74,13 +74,16 @@ $(function () {
                 else
                     $(this).css("background","#fafafa");
                 $(".list").eq(index).prop("active",false);
+                $(".list").eq(index).css("color","#000000");
             });
             songId = playerControls.songId;
             $(".list").eq(songId).prop("active",true);
             $(".list").eq(songId).css("background","#00bd9b");
+            $(".list").eq(songId).css("color","#f0e68c");
         }
-        if(playerControls.repeatSong)
+        if(playerControls.repeatSong) {
             $(".repeat").addClass("loopActive");
+        }
         else
             $(".repeat").removeClass("loopActive");
 
@@ -155,9 +158,12 @@ $(function () {
             else
                 $(this).css("background","#fafafa");
             $(".list").eq(index).prop("active",false);
+            $(".list").eq(index).css("color","#000000");
+
         });
         $(".list").eq(index).prop("active",true);
         $(".list").eq(index).css("background","#00bd9b");
+        $(".list").eq(index).css("color","#f0e68c");
 
         var value =  $(".list").eq(index).attr("name");
         songId = index;
@@ -225,6 +231,7 @@ $(function () {
             $(this).addClass("loopActive");
         else
             $(this).removeClass("loopActive");
+
         socket.emit('ctl',{name:'repeatSong',value:repeatSong});
     });
     $(".volumeBar").change(function(){
