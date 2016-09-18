@@ -54,6 +54,8 @@ MusicOut.prototype = {
 
     mute:false,
 
+    lightDark:false,
+
     changeRhythm:function(songPart,speed){
         for(var i = 0; i < songPart.length; i++){
             var t = Math.ceil(parseInt(songPart[i].time)/speed);
@@ -165,7 +167,12 @@ MusicOut.prototype = {
                         state:MusicOut.prototype.currentPart.state,
                         noteIndex:note.index
                     });
-                    $('body').css('background',color[MusicOut.prototype.room]);
+                    // if(!MusicOut.prototype.lightDark)
+                        $('body').css('background', color[MusicOut.prototype.room]);
+                    // else
+                    //     $('body').css('background',"#000000");
+
+                    MusicOut.prototype.lightDark = !MusicOut.prototype.lightDark;
                     note.noteName = MusicOut.prototype.changeKey(note.noteName,MusicOut.prototype.key);
                     // MusicOut.prototype.changeInstruments(MusicOut.prototype.instrumentIndex);
                     MusicOut.prototype.changeVolume(MusicOut.prototype.volume);
@@ -173,7 +180,6 @@ MusicOut.prototype = {
                         MusicOut.prototype.synthesizerPoly.triggerAttackRelease(note.noteName, note.duration, time, note.velocity);
                     $("#note").text("Note:" + note.noteName);
                 }
-
 
             }, this.songPart);
             refreshAudioCtx();

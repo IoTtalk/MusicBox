@@ -62,7 +62,9 @@ ul, li {
     width: 100%;
     background-color: #fafafa;
 }
-
+#playListContainer{
+    height: 100%;
+}
 #listContainer ul {
     background-color: #fafafa;
     clear: both;

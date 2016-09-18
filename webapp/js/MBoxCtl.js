@@ -36,6 +36,10 @@ $(function () {
 
     //iottalk communication
     function pull (odf_name, data) {
+        if(odf_name == 'Control') {
+            if (data[0] == 'SET_DF_STATUS')
+                dan.push('Control', ['SET_DF_STATUS_RSP', data[1]]);
+        }
         console.log( odf_name+":"+ data );
     }
     var macAddr;
@@ -105,6 +109,11 @@ $(function () {
         }
     });
     //ui
+    //size
+    $("#listContainer").css('height',$(window).height()-150);
+    $( window ).resize(function() {
+        $("#listContainer").css('height',$(window).height()-150);
+    });
     $('#c').dropdown({
         onChange: function(value, text, $selectedItem) {
             dan.push("C-I",[value]);
@@ -153,13 +162,8 @@ $(function () {
     });
     var activeSongListByIndex = function(index){
         $(".list").each(function(index){
-            if(index&1)
-                $(this).css("background","#efefef");
-            else
-                $(this).css("background","#fafafa");
+            $(".list").eq(index).removeAttr("style");
             $(".list").eq(index).prop("active",false);
-            $(".list").eq(index).css("color","#000000");
-
         });
         $(".list").eq(index).prop("active",true);
         $(".list").eq(index).css("background","#00bd9b");
@@ -238,7 +242,6 @@ $(function () {
         dan.push("Volume-I",[this.value]);
         $("#volumeFeature span").text(this.value+".0");
     });
-    $("#listContainer ul").css('height',$( window ).height()*0.7);
 
 });
 
