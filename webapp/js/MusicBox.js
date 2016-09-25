@@ -167,10 +167,10 @@ MusicOut.prototype = {
                         state:MusicOut.prototype.currentPart.state,
                         noteIndex:note.index
                     });
-                    // if(!MusicOut.prototype.lightDark)
+                    if(!MusicOut.prototype.lightDark)
                         $('body').css('background', color[MusicOut.prototype.room]);
-                    // else
-                    //     $('body').css('background',"#000000");
+                    else
+                        $('body').css('background',"#000000");
 
                     MusicOut.prototype.lightDark = !MusicOut.prototype.lightDark;
                     note.noteName = MusicOut.prototype.changeKey(note.noteName,MusicOut.prototype.key);
