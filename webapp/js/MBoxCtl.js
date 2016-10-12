@@ -59,10 +59,12 @@ $(function () {
         socket.emit("getPlayerControls");
 
     socket.emit("mboxctlMacAddr",macAddr);
-    document.title = 'MBoxCtl(' + macAddr+')';
+    var d_name = (Math.floor(Math.random() * 99)).toString() +'.'+ "MBoxCtl";
+    document.title = d_name;
 
     dan.init(pull, 'http://' + iottalkIP , macAddr, {
         'dm_name': 'MBoxCtl',
+        'd_name' : d_name,
         'u_name': 'yb',
         'is_sim': false,
         'df_list': IDFList

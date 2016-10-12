@@ -62,6 +62,7 @@ console.log('mac address:' + macAddr);
 dan.init(msgHandler.pull, 'http://' + iottalkIP , macAddr, {
 
     'dm_name': 'MusicBox',
+    'd_name' : (Math.floor(Math.random() * 99)).toString() +'.'+ "MusicBox",
     'u_name': 'yb',
     'is_sim': false,
     'df_list':ODFList
