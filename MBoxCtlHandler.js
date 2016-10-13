@@ -28,6 +28,7 @@ var mboxctlHandler = (function () {
                                 return;
                         }
                         csmapi.deregister(mboxctlDict[socket.id],function () {
+                            servio.sockets.emit("pause");
                             console.log("mboxctl: deregister");
                         });
                         delete mboxctlDict[socket.id];
