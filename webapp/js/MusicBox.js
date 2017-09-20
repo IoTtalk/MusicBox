@@ -345,4 +345,18 @@ $(document).ready(function () {
         console.log('start');
         music.start();
     });
+	
+	//automatic enter the room by hash
+	var hash = window.location.hash;
+	hash = parseInt(hash.substring(1));
+	if(hash >=0 && hash <= 6){
+		if(iOS())
+			socket.emit("join_iOS", hash);
+		else
+			socket.emit("join", hash);
+	}
+	//refresh the page after 1hr
+	setTimeout(function(){
+		window.location.reload(1);
+	}, 3600*1000*10);	   
 });

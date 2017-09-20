@@ -146,6 +146,52 @@ var msgHandler = (function () {
         else
             servio.sockets.emit(feature, obj);
     };
+
+    var Song_O = function (obj) {
+        reset();
+        // copy obj by using JSON parse and stringify
+        song = JSON.parse(JSON.stringify(obj));
+        // rawSong will be used when replay the song
+        rawSong = JSON.parse(JSON.stringify(obj));
+
+        if (songId != -1) {
+            console.log("switch song!");
+            servio.sockets.emit("switchSong");
+        }
+        songId = song.songId;
+        addIndexToSongPart(song.songPart);
+        if(mode == 0)
+            sendNotes();
+        else if(mode == 1)
+            sendSong();
+    };
+    var Key_O = function (odf_name,obj){
+        sendFeature(odf_name,obj);
+        key = parseInt(obj);
+    };
+    var Volume_O = function(odf_name,obj){
+        sendFeature(odf_name,obj);
+        volume = parseInt(obj);
+    };
+    var L_O = function(odf_name,obj){
+        sendFeature(odf_name,obj);
+        luminance = parseInt(obj);
+    };
+    var Period_O = function(obj){
+        period = parseInt(obj);
+    };
+    var C_O = function(obj){
+        C = parseInt(obj);
+    };
+    var N_O = function(obj){
+        N = parseInt(obj);
+        space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,N);
+    };
+    var Mode_O = function(obj){
+        mode = parseInt(obj);
+    };
+
+
     var iOSClient = [];
     var receiveSongAckNum = 0;
     return {
@@ -291,7 +337,18 @@ var msgHandler = (function () {
                     }
                 });
 
+                //bypass IoTtalk
+                socket.on('Song-I',function (data) { Song_O(data[0]); });
+                socket.on('Key-I',function (data) { Key_O("Key-O", data[0]); });
+                socket.on('Volume-I',function (data) { Volume_O("Volume-O", data[0]); });
+                socket.on('L-I',function (data) { L_O("L-O", data[0]); });
+                socket.on('Period-I',function (data) { Period_O(data[0]); });
+                socket.on('C-I',function (data) { C_O(data[0]); });
+                socket.on('N-I',function (data) { N_O(data[0]); });
+                socket.on('Mode-I',function (data) { Mode_O(data[0]); });
+
             });
+
         },
         pull:function (odf_name, data) {
 
@@ -300,49 +357,28 @@ var msgHandler = (function () {
 
             switch (odf_name){
                 case "Song-O":
-                    reset();
-                    song = obj;
-                    // copy obj by using JSON parse and stringify
-                    song = JSON.parse(JSON.stringify(obj));
-                    // rawSong will be used when replay the song
-                    rawSong = JSON.parse(JSON.stringify(obj));
-
-                    if (songId != -1) {
-                        console.log("switch song!");
-                        servio.sockets.emit("switchSong");
-                    }
-                    songId = song.songId;
-                    addIndexToSongPart(song.songPart);
-                    if(mode == 0)
-                        sendNotes();
-                    else if(mode == 1)
-                        sendSong();
-
+                    Song_O(obj);
                     break;
                 case "Key-O":
-                    sendFeature(odf_name,obj);
-                    key = parseInt(obj);
+                    Key_O(odf_name, obj);
                     break;
                 case "Volume-O":
-                    sendFeature(odf_name,obj);
-                    volume = parseInt(obj);
+                    Volume_O(odf_name, obj);
                     break;
                 case "L-O":
-                    sendFeature(odf_name,obj);
-                    luminance = parseInt(obj);
+                    L_O(odf_name, obj);
                     break;
                 case "Period-O":
-                    period = parseInt(obj);
+                    Period_O(obj);
                     break;
                 case "C-O":
-                    C = parseInt(obj);
+                    C_O(obj);
                     break;
                 case "N-O":
-                    N = parseInt(obj);
-                    space = Array.apply(null, Array(color.length)).map(Number.prototype.valueOf,N)
+                    N_O(obj);
                     break;
                 case "Mode-O":
-                    mode = parseInt(obj);
+                    Mode_O(obj);
                     break;
             }
         },

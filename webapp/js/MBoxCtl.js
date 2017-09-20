@@ -4,6 +4,8 @@ var songId = -1;
 var track = 0;
 var socket = io.connect();
 var share = false;
+var bypassIoTtalk = true;
+
 
 //retrieve file
 var getFileBlob = function (url, cb) {
@@ -26,11 +28,20 @@ var toBinary = function (blob) {
     reader.onloadend = function () {
         song = MidiConvert.parseParts(reader.result)[track];
         var obj = {songPart: song, songId: songId};
-        dan.push("Song-I",[obj]);
+        sendFeature("Song-I",[obj]);
+
     };
     reader.readAsBinaryString(blob);
 };
 
+var sendFeature = function(feature, data){
+    if(!bypassIoTtalk){
+        dan.push(feature, data);
+    }
+    else{
+        socket.emit(feature, data);
+    }
+};
 
 $(function () {
 
@@ -39,8 +50,16 @@ $(function () {
         if(odf_name == 'Control') {
             if (data[0] == 'SET_DF_STATUS')
                 dan.push('Control', ['SET_DF_STATUS_RSP', data[1]]);
+            if(data[0] == 'RESUME'){
+                bypassIoTtalk = false;
+                console.log('RESUME');
+            }
+            if(data[0] == 'SUSPEND'){
+                bypassIoTtalk = true;
+                console.log('SUSPEND');
+            }
         }
-        console.log( odf_name+":"+ data );
+        console.log( odf_name+":"+ JSON.stringify(data) );
     }
     var macAddr;
     var genMacAddr = function () {
@@ -118,7 +137,7 @@ $(function () {
     });
     $('#c').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("C-I",[value]);
+            sendFeature("C-I",[value]);
             $("#cVal").text(value);
             console.log('c'+value);
         },
@@ -126,21 +145,21 @@ $(function () {
     });
     $('#n').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("N-I",[value]);
+            sendFeature("N-I",[value]);
             $("#nVal").text(value);
         },
         allowReselection: true
     });
     $('#l').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("L-I",[value]);
+            sendFeature("L-I",[value]);
             $("#lVal").text(value);
         },
         allowReselection: true
     });
     $('#period').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("Period-I",[value]);
+            sendFeature("Period-I",[value]);
             $("#periodVal").text(value);
         },
         allowReselection: true
@@ -148,16 +167,16 @@ $(function () {
     $('#mode').dropdown({
         onChange: function(value, text, $selectedItem) {
             if(value == "sequential")
-                dan.push("Mode-I",[0]);
+                sendFeature("Mode-I",[0]);
             else if(value == "parallel")
-                dan.push("Mode-I",[1]);
+                sendFeature("Mode-I",[1]);
             $("#modeVal").text(value);
         },
         allowReselection: true
     });
     $('#key').dropdown({
         onChange: function(value, text, $selectedItem) {
-            dan.push("Key-I",[value]);
+            sendFeature("Key-I",[value]);
             $("#keyVal").text(value);
         },
         allowReselection: true
@@ -241,7 +260,7 @@ $(function () {
         socket.emit('ctl',{name:'repeatSong',value:repeatSong});
     });
     $(".volumeBar").change(function(){
-        dan.push("Volume-I",[this.value]);
+        sendFeature("Volume-I",[this.value]);
         $("#volumeFeature span").text(this.value+".0");
     });
 
