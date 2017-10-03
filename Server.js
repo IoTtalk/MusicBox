@@ -36,7 +36,14 @@ app.post('/upload', function(req, res) {
         return;
     }
     sampleFile = req.files.sampleFile;
-    sampleFile.mv("./webapp/midi/"+sampleFile.name, function(err) {
+    if(sampleFile.name.substr(-3) == "MID"){// To handle filename end with MID
+        sampleFile.name = sampleFile.name.substring(0, sampleFile.name.length-3) + "mid";
+    }
+    else if(sampleFile.name.substr(-3) != "mid"){
+        res.end('File type not support!');
+        return;
+    }
+    sampleFile.mv("./webapp/midi/" + sampleFile.name, function(err) {
         if (err) {
             res.status(500).send(err);
         }
