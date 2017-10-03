@@ -33,8 +33,6 @@ MBoxCtl url: http://localhost:5566/mboxctl
 
 2) Connect all Device Feature 1-1 like this:
 
-![alt text](https://s9.postimg.org/4z32w0uqn/Screen_Shot_2016_09_04_at_8_34_10_PM.png)
-
 
 
 ## Introduce to MusicBox
