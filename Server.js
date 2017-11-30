@@ -80,7 +80,10 @@ dan.init(msgHandler.pull, 'http://' + iottalkIP , macAddr, {
     //deregister when app is closing
     process.on('exit', dan.deregister);
     //catches ctrl+c event
-    process.on('SIGINT', dan.deregister);
+    process.on('SIGINT', function(){
+		dan.deregister();
+		process.exit(1);
+	});
     //catches uncaught exceptions
     process.on('uncaughtException', dan.deregister);
 
