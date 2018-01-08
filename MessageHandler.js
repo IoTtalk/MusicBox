@@ -221,7 +221,7 @@ var msgHandler = (function () {
                 });
                 socket.on('join_iOS',function (room) {
                     if(space[room] > 0) {
-                        //iOS is not support tonejs so manage iOS socket in other way
+                        //iOS is not support tonejs so manage iOS socket in another way
                         socket.room = room;
                         socket.iOS = true;
                         iOSClient.push(socket);
